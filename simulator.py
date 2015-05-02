@@ -35,6 +35,7 @@ class Simulator:
         self.jsbs_states = {
             "ic/gamma-rad": [0],
             "position/h-sl-meters": [self.ic["hgt"].magnitude],
+            "attitude/theta-rad": [0],
             "attitude/phi-rad": [0],
             }
         self.jsbs_ic = {
@@ -78,38 +79,33 @@ class Simulator:
         """Generate a report of the simulation"""
         rg = HtmlReportGenerator(self.args)
 
+        # XXX remove code duplication
+
         # altitude pitch figure
-        fig = plt.figure(1)
-        plt.plot(
-            self.sim_states["t"],
-            self.jsbs_states["position/h-sl-meters"],
-            )
-        plt.plot(
-            self.sim_states["t"],
-            ureg.Quantity(
-                self.jsbs_states["attitude/phi-rad"],
-                "rad").to(
-                ureg.deg).magnitude)
-        plt.xlabel("time [s]")
-        plt.legend(['h [m]', 'pitch[deg]'])
-        rg.plots["Altitude and Pitch"] = fig
+        rg.create_add_plot(self.sim_states["t"],
+                           {"h [m]": self.jsbs_states["position/h-sl-meters"],
+                            "pitch [deg]":
+                            ureg.Quantity(
+                            self.jsbs_states["attitude/theta-rad"],
+                            "rad").to(ureg.deg).magnitude
+                            }, "Altitude and Pitch")
 
         # elevator pitch figure
-        fig = plt.figure(2)
-        plt.xlabel("t, sec")
-        plt.plot(
-            self.sim_states["t"],
-            self.jsbs_inputs["fcs/elevator-cmd-norm"],
-            )
-        plt.plot(
-            self.sim_states["t"],
-            ureg.Quantity(
-                self.jsbs_states["attitude/phi-rad"],
-                "rad").to(
-                ureg.deg).magnitude)
-        plt.xlabel("time [s]")
-        plt.legend(['elevator normed', 'pitch[deg]'])
-        rg.plots["Pitch and elevator"] = fig
+        rg.create_add_plot(self.sim_states["t"],
+                           {"elevator": self.jsbs_inputs["fcs/elevator-cmd-norm"],
+                            "pitch [deg]":
+                            ureg.Quantity(
+                            self.jsbs_states["attitude/theta-rad"],
+                            "rad").to(ureg.deg).magnitude
+                            }, "Elevator and pitch")
+
+        # roll figure
+        rg.create_add_plot(self.sim_states["t"],
+                           {"pitch [deg]":
+                            ureg.Quantity(
+                            self.jsbs_states["attitude/phi-rad"],
+                            "rad").to(ureg.deg).magnitude
+                            }, "Roll")
 
         rg.generate()
         rg.save()

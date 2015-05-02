@@ -50,6 +50,22 @@ class HtmlReportGenerator:
         for k,v in self.plots.items():
             self.plots_mpld3[k] = mpld3.fig_to_html(v)
 
+    def create_add_plot(self, time, plot_values, title):
+        """
+        Helps generating a matplotlib plot and adds the result to the plots list
+
+        :param time list of time values
+        :param plot_values dict of list of values
+        :param title a string
+        """
+        fig = plt.figure(len(self.plots))
+        for k, v in plot_values.items():
+            plt.plot(time, v)
+        plt.xlabel("time [s]")
+        plt.legend([ k for k in plot_values])
+        self.plots[title] = fig
+
+
 
     def test(self):
         """Test"""
