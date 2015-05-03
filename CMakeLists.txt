@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++11")
 
-set(FIRMWARE_DIR ${CMAKE_SOURCE_DIR}/Firmware/)
+set(FIRMWARE_DIR ${CMAKE_SOURCE_DIR}/external/Firmware/)
 
 # some hacks to get of NuttX/PX4 specialities
 add_definitions(-D__EXPORT=)
@@ -21,7 +21,7 @@ include_directories(${FIRMWARE_DIR}src/lib)
 include_directories(${FIRMWARE_DIR}src)
 include_directories(${EIGEN_INCLUDE_DIR})
 
-# executables
+# libraries
 add_library(pitch_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_pitch_controller.cpp
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_controller.cpp

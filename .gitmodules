@@ -1,6 +1,6 @@
 [submodule "jsbsim"]
-	path = jsbsim
+	path = external/jsbsim
 	url = https://gitorious.org/jsbsim/jsbsim.git
 [submodule "Firmware"]
-	path = Firmware
+	path = external/Firmware
 	url = https://github.com/PX4/Firmware.git

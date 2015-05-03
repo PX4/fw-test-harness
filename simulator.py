@@ -122,14 +122,14 @@ class Simulator:
         self.output_results()
 
 if __name__ == "__main__":
-    """run with python2 simulator.py ~/src/jsbsim"""
+    """run with python2 simulator.py"""
     parser = argparse.ArgumentParser(
         description='simulates aircraft control with px4/mtecs')
     parser.add_argument('--test', dest='test', action='store_true')
     parser.add_argument(
         '--jsbsim_root',
         dest='jsbsim_root',
-        default=os.path.expanduser('./jsbsim/'))
+        default=os.path.expanduser('./external/jsbsim/'))
     parser.add_argument('-o', dest='filename_out', default='report.html')
     args = parser.parse_args()
     s = Simulator(vars(args))
