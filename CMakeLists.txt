@@ -22,9 +22,11 @@ include_directories(${FIRMWARE_DIR}src)
 include_directories(${EIGEN_INCLUDE_DIR})
 
 # libraries
-add_library(pitch_controller SHARED
-  ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_pitch_controller.cpp
+add_library(attitude_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_controller.cpp
+  ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_pitch_controller.cpp
+  ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_roll_controller.cpp
+  ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_yaw_controller.cpp
   ${FIRMWARE_DIR}src/platforms/ros/perf_counter.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
 )
