@@ -17,6 +17,7 @@ make
 
 ## Run
 ```
+cd module
 python2 simulator.py
 ```
 

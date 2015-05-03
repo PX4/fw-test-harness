@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (fw-test-harness)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++11")
 
@@ -29,6 +29,8 @@ add_library(attitude_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_yaw_controller.cpp
   ${FIRMWARE_DIR}src/platforms/ros/perf_counter.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
-)
+  )
 
-message(info ${FIRMWARE_DIR})
+# add python module
+set(PACKAGE_VERSION 0.1)
+add_subdirectory(fw_test_harness)

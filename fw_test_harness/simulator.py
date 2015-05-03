@@ -140,7 +140,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--jsbsim_root',
         dest='jsbsim_root',
-        default=os.path.expanduser('./external/jsbsim/'))
+        default=os.path.expanduser('../external/jsbsim/'))          # XXX remove ugly hardcoded path
     parser.add_argument('-o', dest='filename_out', default='report.html')
     args = parser.parse_args()
     s = Simulator(vars(args))
