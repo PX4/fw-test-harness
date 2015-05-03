@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import argparse
 from pint import UnitRegistry
 from html_report_generator import HtmlReportGenerator
+from fixedwing_controller import FixedWingController
+
 ureg = UnitRegistry()
 
 
@@ -28,6 +30,8 @@ class Simulator:
             "hgt": 400 * ureg.meter
         }
 
+        self.controller = FixedWingController()
+
     def init_sim(self):
         """init/reset simulation"""
 
@@ -44,7 +48,9 @@ class Simulator:
             "ic/gamma-rad": [0],
             }
         self.jsbs_inputs = {
-            "fcs/elevator-cmd-norm": [0]
+            "fcs/aileron-cmd-norm": [0],
+            "fcs/elevator-cmd-norm": [0],
+            "fcs/rudder-cmd-norm": [0]
             }
         self.sim_states = {
             "t": [0.0]
@@ -63,12 +69,16 @@ class Simulator:
         want to move the parameters in and out manually
         """
         # control
-        self.jsbs_inputs["fcs/elevator-cmd-norm"].append(0.01 * (400 -
-                                                         self.jsbs_states["position/h-sl-meters"][-1]))
+        # self.jsbs_inputs["fcs/elevator-cmd-norm"].append(0.01 * (400 -
+                                                         # self.jsbs_states["position/h-sl-meters"][-1]))
+        controls = self.controller.control(state=self.sim_states)
+        self.jsbs_inputs["fcs/aileron-cmd-norm"].append(controls[0])
+        self.jsbs_inputs["fcs/elevator-cmd-norm"].append(controls[1])
+        self.jsbs_inputs["fcs/rudder-cmd-norm"].append(controls[2])
 
         # pass to jsbsim
         for k, v in self.jsbs_inputs.items():
-            self.fdm.set_property_value(k, v[0])
+            self.fdm.set_property_value(k, v[-1])
         self.fdm.run()
         for k, v in self.jsbs_states.items():
             self.jsbs_states[k].append(self.fdm.get_property_value(k))
@@ -79,7 +89,23 @@ class Simulator:
         """Generate a report of the simulation"""
         rg = HtmlReportGenerator(self.args)
 
-        # XXX remove code duplication
+        # aileron roll figure
+        rg.create_add_plot(self.sim_states["t"],
+                           {"aileron": self.jsbs_inputs["fcs/aileron-cmd-norm"],
+                            "roll [deg]":
+                            ureg.Quantity(
+                            self.jsbs_states["attitude/phi-rad"],
+                            "rad").to(ureg.deg).magnitude
+                            }, "Aileron and Roll")
+        
+        # elevator pitch figure
+        rg.create_add_plot(self.sim_states["t"],
+                           {"elevator": self.jsbs_inputs["fcs/elevator-cmd-norm"],
+                            "pitch [deg]":
+                            ureg.Quantity(
+                            self.jsbs_states["attitude/theta-rad"],
+                            "rad").to(ureg.deg).magnitude
+                            }, "Elevator and pitch")
 
         # altitude pitch figure
         rg.create_add_plot(self.sim_states["t"],
@@ -90,22 +116,7 @@ class Simulator:
                             "rad").to(ureg.deg).magnitude
                             }, "Altitude and Pitch")
 
-        # elevator pitch figure
-        rg.create_add_plot(self.sim_states["t"],
-                           {"elevator": self.jsbs_inputs["fcs/elevator-cmd-norm"],
-                            "pitch [deg]":
-                            ureg.Quantity(
-                            self.jsbs_states["attitude/theta-rad"],
-                            "rad").to(ureg.deg).magnitude
-                            }, "Elevator and pitch")
 
-        # roll figure
-        rg.create_add_plot(self.sim_states["t"],
-                           {"pitch [deg]":
-                            ureg.Quantity(
-                            self.jsbs_states["attitude/phi-rad"],
-                            "rad").to(ureg.deg).magnitude
-                            }, "Roll")
 
         rg.generate()
         rg.save()

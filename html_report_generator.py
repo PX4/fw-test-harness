@@ -2,6 +2,7 @@
 import argparse
 from yattag import Doc
 import matplotlib.pyplot as plt, mpld3
+import collections
 
 
 class HtmlReportGenerator:
@@ -14,8 +15,8 @@ class HtmlReportGenerator:
         self.report = "" # the html string
         self.variables = {} # dictionary cotnaining all the result varaibles
         self.title = ""
-        self.plots = {} # dictionary of matplotlib plots
-        self.plots_mpld3 = {} # dictionary of matplotlib plots
+        self.plots = collections.OrderedDict() # dictionary of matplotlib plots
+        self.plots_mpld3 = collections.OrderedDict() # dictionary of matplotlib plots
 
 
     def generate(self):
