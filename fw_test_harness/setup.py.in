@@ -1,11 +1,30 @@
 #!/usr/bin/env python
 from distutils.core import setup
+from distutils.extension import Extension
 from Cython.Build import cythonize
+
+
+ext_modules = [
+    Extension("fw_attitude_controller",
+    ["${CMAKE_CURRENT_SOURCE_DIR}/ecl_controller.pyx"],
+    language="c++",              # this causes Pyrex/Cython to create C++ source
+    include_dirs=["${CMAKE_SOURCE_DIR}/Firmware_custom",
+                  "${FIRMWARE_DIR}src/lib/ecl/attitude_fw/",
+                  "${FIRMWARE_DIR}src/modules",
+                  "${FIRMWARE_DIR}src/src/lib",
+                  "${FIRMWARE_DIR}src/src"
+                  ],
+    define_macros=[('__EXPORT', '')],
+    library_dirs=['${CMAKE_BINARY_DIR}'],
+    libraries=["attitude_controller"],
+    extra_link_args=[]
+              )
+]
 
 setup(
     name='fw_test_harness',
     version='${PACKAGE_VERSION}',
     package_dir={ '': '${CMAKE_SOURCE_DIR}' },
     packages=['fw_test_harness'],
-    ext_modules = cythonize("${CMAKE_CURRENT_SOURCE_DIR}/ecl_controller.pyx")
+    ext_modules = cythonize(ext_modules)
 )

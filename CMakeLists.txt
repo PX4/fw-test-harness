@@ -15,7 +15,7 @@ add_definitions(-D_GLIBCXX_USE_C99_MATH)
 find_package(Eigen REQUIRED)
 
 # include dirs, order is relevant, our customizations need to be in 1st place
-include_directories(./Firmware_custom/)
+include_directories("${CMAKE_SOURCE_DIR}/Firmware_custom")
 include_directories(${FIRMWARE_DIR}src/modules)
 include_directories(${FIRMWARE_DIR}src/lib)
 include_directories(${FIRMWARE_DIR}src)
