@@ -3,19 +3,23 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "libraries": [
-            "attitude_controller"
-        ], 
-        "depends": [
-            "/home/thomasgubler/src/fw-test-harness/external/Firmware/src/lib/ecl/attitude_fw/ecl_pitch_controller.h"
-        ], 
+        "language": "c++", 
         "define_macros": [
             [
                 "__EXPORT", 
                 ""
             ]
         ], 
-        "language": "c++", 
+        "libraries": [
+            "attitude_controller"
+        ], 
+        "depends": [
+            "/home/thomasgubler/src/fw-test-harness/external/Firmware/src/lib/ecl/attitude_fw/ecl_pitch_controller.h", 
+            "/home/thomasgubler/src/fw-test-harness/external/Firmware/src/lib/ecl/attitude_fw/ecl_controller.h"
+        ], 
+        "library_dirs": [
+            "/home/thomasgubler/src/fw-test-harness/build"
+        ], 
         "include_dirs": [
             "/home/thomasgubler/src/fw-test-harness/Firmware_custom", 
             "/home/thomasgubler/src/fw-test-harness/external/Firmware/src/lib/ecl/attitude_fw/", 
@@ -271,6 +275,11 @@ class __Pyx_FakeReference {
 #include <math.h>
 #define __PYX_HAVE__fw_test_harness__ecl_controller
 #define __PYX_HAVE_API__fw_test_harness__ecl_controller
+#include "ecl_controller.h"
+#include "ios"
+#include "new"
+#include "stdexcept"
+#include "typeinfo"
 #include "ecl_pitch_controller.h"
 #ifdef _OPENMP
 #include <omp.h>
@@ -458,6 +467,20 @@ static const char *__pyx_f[] = {
 };
 
 /*--- Type declarations ---*/
+struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController;
+
+/* "fw_test_harness/ecl_controller.pyx":84
+ *         void set_roll_ff(float)
+ * 
+ * cdef class PyECLPitchController(object):             # <<<<<<<<<<<<<<
+ *     cdef ECL_PitchController *thisptr      # hold a C++ instance which we're wrapping
+ *     def __cinit__(self):
+ */
+struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController {
+  PyObject_HEAD
+  ECL_PitchController *thisptr;
+};
+
 
 /* --- Runtime support code (head) --- */
 #ifndef CYTHON_REFNANNY
@@ -522,6 +545,18 @@ static const char *__pyx_f[] = {
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
+static CYTHON_INLINE void __Pyx_ErrRestore(PyObject *type, PyObject *value, PyObject *tb);
+static CYTHON_INLINE void __Pyx_ErrFetch(PyObject **type, PyObject **value, PyObject **tb);
+
+static void __Pyx_WriteUnraisable(const char *name, int clineno,
+                                  int lineno, const char *filename,
+                                  int full_traceback);
+
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+static CYTHON_INLINE int __Pyx_CheckKeywordStrings(PyObject *kwdict, const char* function_name, int kw_allowed);
+
 typedef struct {
     int code_line;
     PyCodeObject* code_object;
@@ -539,6 +574,45 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object);
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
+#ifndef __Pyx_CppExn2PyErr
+#include <new>
+#include <typeinfo>
+#include <stdexcept>
+#include <ios>
+static void __Pyx_CppExn2PyErr() {
+  try {
+    if (PyErr_Occurred())
+      ; // let the latest Python exn pass through and ignore the current one
+    else
+      throw;
+  } catch (const std::bad_alloc& exn) {
+    PyErr_SetString(PyExc_MemoryError, exn.what());
+  } catch (const std::bad_cast& exn) {
+    PyErr_SetString(PyExc_TypeError, exn.what());
+  } catch (const std::domain_error& exn) {
+    PyErr_SetString(PyExc_ValueError, exn.what());
+  } catch (const std::invalid_argument& exn) {
+    PyErr_SetString(PyExc_ValueError, exn.what());
+  } catch (const std::ios_base::failure& exn) {
+    PyErr_SetString(PyExc_IOError, exn.what());
+  } catch (const std::out_of_range& exn) {
+    PyErr_SetString(PyExc_IndexError, exn.what());
+  } catch (const std::overflow_error& exn) {
+    PyErr_SetString(PyExc_OverflowError, exn.what());
+  } catch (const std::range_error& exn) {
+    PyErr_SetString(PyExc_ArithmeticError, exn.what());
+  } catch (const std::underflow_error& exn) {
+    PyErr_SetString(PyExc_ArithmeticError, exn.what());
+  } catch (const std::exception& exn) {
+    PyErr_SetString(PyExc_RuntimeError, exn.what());
+  }
+  catch (...)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+  }
+}
+#endif
+
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
@@ -550,16 +624,866 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
+/* Module declarations from 'libcpp' */
+
 /* Module declarations from 'fw_test_harness.ecl_controller' */
-static ECL_PitchController *__pyx_v_15fw_test_harness_14ecl_controller_pc;
+static PyTypeObject *__pyx_ptype_15fw_test_harness_14ecl_controller_PyECLPitchController = 0;
+static void __pyx_f_15fw_test_harness_14ecl_controller_convert_control_data(PyObject *, struct ECL_ControlData *); /*proto*/
 #define __Pyx_MODULE_NAME "fw_test_harness.ecl_controller"
 int __pyx_module_is_main_fw_test_harness__ecl_controller = 0;
 
 /* Implementation of 'fw_test_harness.ecl_controller' */
+static int __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController___cinit__(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self); /* proto */
+static void __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_2__dealloc__(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_4control_attitude(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, PyObject *__pyx_v_control_data); /* proto */
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_6control_bodyrate(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_control_data); /* proto */
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_8set_time_constant(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, PyObject *__pyx_v_time_constant); /* proto */
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_10set_k_p(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, PyObject *__pyx_v_k_p); /* proto */
+static PyObject *__pyx_tp_new_15fw_test_harness_14ecl_controller_PyECLPitchController(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static char __pyx_k_yaw[] = "yaw";
 static char __pyx_k_main[] = "__main__";
+static char __pyx_k_roll[] = "roll";
 static char __pyx_k_test[] = "__test__";
+static char __pyx_k_pitch[] = "pitch";
+static char __pyx_k_scaler[] = "scaler";
+static char __pyx_k_airspeed[] = "airspeed";
+static char __pyx_k_yaw_rate[] = "yaw_rate";
+static char __pyx_k_roll_rate[] = "roll_rate";
+static char __pyx_k_acc_body_x[] = "acc_body_x";
+static char __pyx_k_acc_body_y[] = "acc_body_y";
+static char __pyx_k_acc_body_z[] = "acc_body_z";
+static char __pyx_k_pitch_rate[] = "pitch_rate";
+static char __pyx_k_airspeed_max[] = "airspeed_max";
+static char __pyx_k_airspeed_min[] = "airspeed_min";
+static char __pyx_k_speed_body_u[] = "speed_body_u";
+static char __pyx_k_speed_body_v[] = "speed_body_v";
+static char __pyx_k_speed_body_w[] = "speed_body_w";
+static char __pyx_k_yaw_setpoint[] = "yaw_setpoint";
+static char __pyx_k_roll_setpoint[] = "roll_setpoint";
+static char __pyx_k_pitch_setpoint[] = "pitch_setpoint";
+static char __pyx_k_lock_integrator[] = "lock_integrator";
+static char __pyx_k_yaw_rate_setpoint[] = "yaw_rate_setpoint";
+static char __pyx_k_roll_rate_setpoint[] = "roll_rate_setpoint";
+static char __pyx_k_pitch_rate_setpoint[] = "pitch_rate_setpoint";
+static PyObject *__pyx_n_s_acc_body_x;
+static PyObject *__pyx_n_s_acc_body_y;
+static PyObject *__pyx_n_s_acc_body_z;
+static PyObject *__pyx_n_s_airspeed;
+static PyObject *__pyx_n_s_airspeed_max;
+static PyObject *__pyx_n_s_airspeed_min;
+static PyObject *__pyx_n_s_lock_integrator;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_pitch;
+static PyObject *__pyx_n_s_pitch_rate;
+static PyObject *__pyx_n_s_pitch_rate_setpoint;
+static PyObject *__pyx_n_s_pitch_setpoint;
+static PyObject *__pyx_n_s_roll;
+static PyObject *__pyx_n_s_roll_rate;
+static PyObject *__pyx_n_s_roll_rate_setpoint;
+static PyObject *__pyx_n_s_roll_setpoint;
+static PyObject *__pyx_n_s_scaler;
+static PyObject *__pyx_n_s_speed_body_u;
+static PyObject *__pyx_n_s_speed_body_v;
+static PyObject *__pyx_n_s_speed_body_w;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_n_s_yaw;
+static PyObject *__pyx_n_s_yaw_rate;
+static PyObject *__pyx_n_s_yaw_rate_setpoint;
+static PyObject *__pyx_n_s_yaw_setpoint;
+
+/* "fw_test_harness/ecl_controller.pyx":51
+ *         void reset_integrator()
+ * 
+ * cdef void convert_control_data(control_data_l, ECL_ControlData *control_data_s):             # <<<<<<<<<<<<<<
+ *     """Convert python dictionary to cython struct"""
+ *     control_data_s.roll = control_data_l["roll"]
+ */
+
+static void __pyx_f_15fw_test_harness_14ecl_controller_convert_control_data(PyObject *__pyx_v_control_data_l, struct ECL_ControlData *__pyx_v_control_data_s) {
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  float __pyx_t_2;
+  bool __pyx_t_3;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("convert_control_data", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":53
+ * cdef void convert_control_data(control_data_l, ECL_ControlData *control_data_s):
+ *     """Convert python dictionary to cython struct"""
+ *     control_data_s.roll = control_data_l["roll"]             # <<<<<<<<<<<<<<
+ *     control_data_s.pitch = control_data_l["pitch"]
+ *     control_data_s.yaw = control_data_l["yaw"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_roll); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->roll = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":54
+ *     """Convert python dictionary to cython struct"""
+ *     control_data_s.roll = control_data_l["roll"]
+ *     control_data_s.pitch = control_data_l["pitch"]             # <<<<<<<<<<<<<<
+ *     control_data_s.yaw = control_data_l["yaw"]
+ *     control_data_s.roll_rate = control_data_l["roll_rate"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_pitch); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->pitch = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":55
+ *     control_data_s.roll = control_data_l["roll"]
+ *     control_data_s.pitch = control_data_l["pitch"]
+ *     control_data_s.yaw = control_data_l["yaw"]             # <<<<<<<<<<<<<<
+ *     control_data_s.roll_rate = control_data_l["roll_rate"]
+ *     control_data_s.pitch_rate = control_data_l["pitch_rate"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_yaw); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->yaw = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":56
+ *     control_data_s.pitch = control_data_l["pitch"]
+ *     control_data_s.yaw = control_data_l["yaw"]
+ *     control_data_s.roll_rate = control_data_l["roll_rate"]             # <<<<<<<<<<<<<<
+ *     control_data_s.pitch_rate = control_data_l["pitch_rate"]
+ *     control_data_s.yaw_rate = control_data_l["yaw_rate"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_roll_rate); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->roll_rate = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":57
+ *     control_data_s.yaw = control_data_l["yaw"]
+ *     control_data_s.roll_rate = control_data_l["roll_rate"]
+ *     control_data_s.pitch_rate = control_data_l["pitch_rate"]             # <<<<<<<<<<<<<<
+ *     control_data_s.yaw_rate = control_data_l["yaw_rate"]
+ *     control_data_s.speed_body_u = control_data_l["speed_body_u"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_pitch_rate); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->pitch_rate = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":58
+ *     control_data_s.roll_rate = control_data_l["roll_rate"]
+ *     control_data_s.pitch_rate = control_data_l["pitch_rate"]
+ *     control_data_s.yaw_rate = control_data_l["yaw_rate"]             # <<<<<<<<<<<<<<
+ *     control_data_s.speed_body_u = control_data_l["speed_body_u"]
+ *     control_data_s.speed_body_v = control_data_l["speed_body_v"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_yaw_rate); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->yaw_rate = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":59
+ *     control_data_s.pitch_rate = control_data_l["pitch_rate"]
+ *     control_data_s.yaw_rate = control_data_l["yaw_rate"]
+ *     control_data_s.speed_body_u = control_data_l["speed_body_u"]             # <<<<<<<<<<<<<<
+ *     control_data_s.speed_body_v = control_data_l["speed_body_v"]
+ *     control_data_s.speed_body_w = control_data_l["speed_body_w"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_speed_body_u); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->speed_body_u = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":60
+ *     control_data_s.yaw_rate = control_data_l["yaw_rate"]
+ *     control_data_s.speed_body_u = control_data_l["speed_body_u"]
+ *     control_data_s.speed_body_v = control_data_l["speed_body_v"]             # <<<<<<<<<<<<<<
+ *     control_data_s.speed_body_w = control_data_l["speed_body_w"]
+ *     control_data_s.acc_body_x = control_data_l["acc_body_x"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_speed_body_v); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->speed_body_v = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":61
+ *     control_data_s.speed_body_u = control_data_l["speed_body_u"]
+ *     control_data_s.speed_body_v = control_data_l["speed_body_v"]
+ *     control_data_s.speed_body_w = control_data_l["speed_body_w"]             # <<<<<<<<<<<<<<
+ *     control_data_s.acc_body_x = control_data_l["acc_body_x"]
+ *     control_data_s.acc_body_y = control_data_l["acc_body_y"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_speed_body_w); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->speed_body_w = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":62
+ *     control_data_s.speed_body_v = control_data_l["speed_body_v"]
+ *     control_data_s.speed_body_w = control_data_l["speed_body_w"]
+ *     control_data_s.acc_body_x = control_data_l["acc_body_x"]             # <<<<<<<<<<<<<<
+ *     control_data_s.acc_body_y = control_data_l["acc_body_y"]
+ *     control_data_s.acc_body_z = control_data_l["acc_body_z"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_acc_body_x); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->acc_body_x = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":63
+ *     control_data_s.speed_body_w = control_data_l["speed_body_w"]
+ *     control_data_s.acc_body_x = control_data_l["acc_body_x"]
+ *     control_data_s.acc_body_y = control_data_l["acc_body_y"]             # <<<<<<<<<<<<<<
+ *     control_data_s.acc_body_z = control_data_l["acc_body_z"]
+ *     control_data_s.roll_setpoint = control_data_l["roll_setpoint"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_acc_body_y); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->acc_body_y = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":64
+ *     control_data_s.acc_body_x = control_data_l["acc_body_x"]
+ *     control_data_s.acc_body_y = control_data_l["acc_body_y"]
+ *     control_data_s.acc_body_z = control_data_l["acc_body_z"]             # <<<<<<<<<<<<<<
+ *     control_data_s.roll_setpoint = control_data_l["roll_setpoint"]
+ *     control_data_s.pitch_setpoint = control_data_l["pitch_setpoint"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_acc_body_z); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->acc_body_z = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":65
+ *     control_data_s.acc_body_y = control_data_l["acc_body_y"]
+ *     control_data_s.acc_body_z = control_data_l["acc_body_z"]
+ *     control_data_s.roll_setpoint = control_data_l["roll_setpoint"]             # <<<<<<<<<<<<<<
+ *     control_data_s.pitch_setpoint = control_data_l["pitch_setpoint"]
+ *     control_data_s.yaw_setpoint = control_data_l["yaw_setpoint"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_roll_setpoint); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->roll_setpoint = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":66
+ *     control_data_s.acc_body_z = control_data_l["acc_body_z"]
+ *     control_data_s.roll_setpoint = control_data_l["roll_setpoint"]
+ *     control_data_s.pitch_setpoint = control_data_l["pitch_setpoint"]             # <<<<<<<<<<<<<<
+ *     control_data_s.yaw_setpoint = control_data_l["yaw_setpoint"]
+ *     control_data_s.roll_rate_setpoint = control_data_l["roll_rate_setpoint"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_pitch_setpoint); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->pitch_setpoint = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":67
+ *     control_data_s.roll_setpoint = control_data_l["roll_setpoint"]
+ *     control_data_s.pitch_setpoint = control_data_l["pitch_setpoint"]
+ *     control_data_s.yaw_setpoint = control_data_l["yaw_setpoint"]             # <<<<<<<<<<<<<<
+ *     control_data_s.roll_rate_setpoint = control_data_l["roll_rate_setpoint"]
+ *     control_data_s.pitch_rate_setpoint = control_data_l["pitch_rate_setpoint"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_yaw_setpoint); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->yaw_setpoint = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":68
+ *     control_data_s.pitch_setpoint = control_data_l["pitch_setpoint"]
+ *     control_data_s.yaw_setpoint = control_data_l["yaw_setpoint"]
+ *     control_data_s.roll_rate_setpoint = control_data_l["roll_rate_setpoint"]             # <<<<<<<<<<<<<<
+ *     control_data_s.pitch_rate_setpoint = control_data_l["pitch_rate_setpoint"]
+ *     control_data_s.yaw_rate_setpoint = control_data_l["yaw_rate_setpoint"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_roll_rate_setpoint); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->roll_rate_setpoint = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":69
+ *     control_data_s.yaw_setpoint = control_data_l["yaw_setpoint"]
+ *     control_data_s.roll_rate_setpoint = control_data_l["roll_rate_setpoint"]
+ *     control_data_s.pitch_rate_setpoint = control_data_l["pitch_rate_setpoint"]             # <<<<<<<<<<<<<<
+ *     control_data_s.yaw_rate_setpoint = control_data_l["yaw_rate_setpoint"]
+ *     control_data_s.airspeed_min = control_data_l["airspeed_min"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_pitch_rate_setpoint); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->pitch_rate_setpoint = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":70
+ *     control_data_s.roll_rate_setpoint = control_data_l["roll_rate_setpoint"]
+ *     control_data_s.pitch_rate_setpoint = control_data_l["pitch_rate_setpoint"]
+ *     control_data_s.yaw_rate_setpoint = control_data_l["yaw_rate_setpoint"]             # <<<<<<<<<<<<<<
+ *     control_data_s.airspeed_min = control_data_l["airspeed_min"]
+ *     control_data_s.airspeed_max = control_data_l["airspeed_max"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_yaw_rate_setpoint); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 70; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 70; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->yaw_rate_setpoint = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":71
+ *     control_data_s.pitch_rate_setpoint = control_data_l["pitch_rate_setpoint"]
+ *     control_data_s.yaw_rate_setpoint = control_data_l["yaw_rate_setpoint"]
+ *     control_data_s.airspeed_min = control_data_l["airspeed_min"]             # <<<<<<<<<<<<<<
+ *     control_data_s.airspeed_max = control_data_l["airspeed_max"]
+ *     control_data_s.airspeed = control_data_l["airspeed"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_airspeed_min); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->airspeed_min = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":72
+ *     control_data_s.yaw_rate_setpoint = control_data_l["yaw_rate_setpoint"]
+ *     control_data_s.airspeed_min = control_data_l["airspeed_min"]
+ *     control_data_s.airspeed_max = control_data_l["airspeed_max"]             # <<<<<<<<<<<<<<
+ *     control_data_s.airspeed = control_data_l["airspeed"]
+ *     control_data_s.scaler = control_data_l["scaler"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_airspeed_max); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->airspeed_max = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":73
+ *     control_data_s.airspeed_min = control_data_l["airspeed_min"]
+ *     control_data_s.airspeed_max = control_data_l["airspeed_max"]
+ *     control_data_s.airspeed = control_data_l["airspeed"]             # <<<<<<<<<<<<<<
+ *     control_data_s.scaler = control_data_l["scaler"]
+ *     control_data_s.lock_integrator = control_data_l["lock_integrator"]
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_airspeed); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->airspeed = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":74
+ *     control_data_s.airspeed_max = control_data_l["airspeed_max"]
+ *     control_data_s.airspeed = control_data_l["airspeed"]
+ *     control_data_s.scaler = control_data_l["scaler"]             # <<<<<<<<<<<<<<
+ *     control_data_s.lock_integrator = control_data_l["lock_integrator"]
+ * 
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_scaler); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->scaler = __pyx_t_2;
+
+  /* "fw_test_harness/ecl_controller.pyx":75
+ *     control_data_s.airspeed = control_data_l["airspeed"]
+ *     control_data_s.scaler = control_data_l["scaler"]
+ *     control_data_s.lock_integrator = control_data_l["lock_integrator"]             # <<<<<<<<<<<<<<
+ * 
+ * cdef extern from "ecl_pitch_controller.h":
+ */
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_control_data_l, __pyx_n_s_lock_integrator); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 75; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_3 == (bool)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 75; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_control_data_s->lock_integrator = __pyx_t_3;
+
+  /* "fw_test_harness/ecl_controller.pyx":51
+ *         void reset_integrator()
+ * 
+ * cdef void convert_control_data(control_data_l, ECL_ControlData *control_data_s):             # <<<<<<<<<<<<<<
+ *     """Convert python dictionary to cython struct"""
+ *     control_data_s.roll = control_data_l["roll"]
+ */
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_WriteUnraisable("fw_test_harness.ecl_controller.convert_control_data", __pyx_clineno, __pyx_lineno, __pyx_filename, 0);
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "fw_test_harness/ecl_controller.pyx":86
+ * cdef class PyECLPitchController(object):
+ *     cdef ECL_PitchController *thisptr      # hold a C++ instance which we're wrapping
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         self.thisptr = new ECL_PitchController()
+ *     def __dealloc__(self):
+ */
+
+/* Python wrapper */
+static int __pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  if (unlikely(PyTuple_GET_SIZE(__pyx_args) > 0)) {
+    __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 0, 0, PyTuple_GET_SIZE(__pyx_args)); return -1;}
+  if (unlikely(__pyx_kwds) && unlikely(PyDict_Size(__pyx_kwds) > 0) && unlikely(!__Pyx_CheckKeywordStrings(__pyx_kwds, "__cinit__", 0))) return -1;
+  __pyx_r = __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController___cinit__(((struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController___cinit__(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  ECL_PitchController *__pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__cinit__", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":87
+ *     cdef ECL_PitchController *thisptr      # hold a C++ instance which we're wrapping
+ *     def __cinit__(self):
+ *         self.thisptr = new ECL_PitchController()             # <<<<<<<<<<<<<<
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ */
+  try {
+    __pyx_t_1 = new ECL_PitchController();
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  }
+  __pyx_v_self->thisptr = __pyx_t_1;
+
+  /* "fw_test_harness/ecl_controller.pyx":86
+ * cdef class PyECLPitchController(object):
+ *     cdef ECL_PitchController *thisptr      # hold a C++ instance which we're wrapping
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         self.thisptr = new ECL_PitchController()
+ *     def __dealloc__(self):
+ */
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("fw_test_harness.ecl_controller.PyECLPitchController.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fw_test_harness/ecl_controller.pyx":88
+ *     def __cinit__(self):
+ *         self.thisptr = new ECL_PitchController()
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
+ *         del self.thisptr
+ *     def control_attitude(self, control_data):
+ */
+
+/* Python wrapper */
+static void __pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_3__dealloc__(PyObject *__pyx_v_self) {
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
+  __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_2__dealloc__(((struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+static void __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_2__dealloc__(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self) {
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__dealloc__", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":89
+ *         self.thisptr = new ECL_PitchController()
+ *     def __dealloc__(self):
+ *         del self.thisptr             # <<<<<<<<<<<<<<
+ *     def control_attitude(self, control_data):
+ *         cdef ECL_ControlData control_data_s
+ */
+  delete __pyx_v_self->thisptr;
+
+  /* "fw_test_harness/ecl_controller.pyx":88
+ *     def __cinit__(self):
+ *         self.thisptr = new ECL_PitchController()
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
+ *         del self.thisptr
+ *     def control_attitude(self, control_data):
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "fw_test_harness/ecl_controller.pyx":90
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ *     def control_attitude(self, control_data):             # <<<<<<<<<<<<<<
+ *         cdef ECL_ControlData control_data_s
+ *         convert_control_data(control_data, &control_data_s)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_5control_attitude(PyObject *__pyx_v_self, PyObject *__pyx_v_control_data); /*proto*/
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_5control_attitude(PyObject *__pyx_v_self, PyObject *__pyx_v_control_data) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("control_attitude (wrapper)", 0);
+  __pyx_r = __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_4control_attitude(((struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *)__pyx_v_self), ((PyObject *)__pyx_v_control_data));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_4control_attitude(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, PyObject *__pyx_v_control_data) {
+  struct ECL_ControlData __pyx_v_control_data_s;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("control_attitude", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":92
+ *     def control_attitude(self, control_data):
+ *         cdef ECL_ControlData control_data_s
+ *         convert_control_data(control_data, &control_data_s)             # <<<<<<<<<<<<<<
+ *         return self.thisptr.control_attitude(control_data_s)
+ *     def control_bodyrate(self, control_data):
+ */
+  __pyx_f_15fw_test_harness_14ecl_controller_convert_control_data(__pyx_v_control_data, (&__pyx_v_control_data_s));
+
+  /* "fw_test_harness/ecl_controller.pyx":93
+ *         cdef ECL_ControlData control_data_s
+ *         convert_control_data(control_data, &control_data_s)
+ *         return self.thisptr.control_attitude(control_data_s)             # <<<<<<<<<<<<<<
+ *     def control_bodyrate(self, control_data):
+ *         cdef ECL_ControlData control_data_s
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->control_attitude(__pyx_v_control_data_s)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "fw_test_harness/ecl_controller.pyx":90
+ *     def __dealloc__(self):
+ *         del self.thisptr
+ *     def control_attitude(self, control_data):             # <<<<<<<<<<<<<<
+ *         cdef ECL_ControlData control_data_s
+ *         convert_control_data(control_data, &control_data_s)
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("fw_test_harness.ecl_controller.PyECLPitchController.control_attitude", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fw_test_harness/ecl_controller.pyx":94
+ *         convert_control_data(control_data, &control_data_s)
+ *         return self.thisptr.control_attitude(control_data_s)
+ *     def control_bodyrate(self, control_data):             # <<<<<<<<<<<<<<
+ *         cdef ECL_ControlData control_data_s
+ *         return self.thisptr.control_attitude(control_data_s)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_7control_bodyrate(PyObject *__pyx_v_self, PyObject *__pyx_v_control_data); /*proto*/
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_7control_bodyrate(PyObject *__pyx_v_self, PyObject *__pyx_v_control_data) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("control_bodyrate (wrapper)", 0);
+  __pyx_r = __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_6control_bodyrate(((struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *)__pyx_v_self), ((PyObject *)__pyx_v_control_data));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_6control_bodyrate(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_control_data) {
+  struct ECL_ControlData __pyx_v_control_data_s;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("control_bodyrate", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":96
+ *     def control_bodyrate(self, control_data):
+ *         cdef ECL_ControlData control_data_s
+ *         return self.thisptr.control_attitude(control_data_s)             # <<<<<<<<<<<<<<
+ *     def set_time_constant(self, time_constant):
+ *         self.thisptr.set_time_constant(time_constant)
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->control_attitude(__pyx_v_control_data_s)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "fw_test_harness/ecl_controller.pyx":94
+ *         convert_control_data(control_data, &control_data_s)
+ *         return self.thisptr.control_attitude(control_data_s)
+ *     def control_bodyrate(self, control_data):             # <<<<<<<<<<<<<<
+ *         cdef ECL_ControlData control_data_s
+ *         return self.thisptr.control_attitude(control_data_s)
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("fw_test_harness.ecl_controller.PyECLPitchController.control_bodyrate", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fw_test_harness/ecl_controller.pyx":97
+ *         cdef ECL_ControlData control_data_s
+ *         return self.thisptr.control_attitude(control_data_s)
+ *     def set_time_constant(self, time_constant):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_time_constant(time_constant)
+ *     def set_k_p(self, k_p):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_9set_time_constant(PyObject *__pyx_v_self, PyObject *__pyx_v_time_constant); /*proto*/
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_9set_time_constant(PyObject *__pyx_v_self, PyObject *__pyx_v_time_constant) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_time_constant (wrapper)", 0);
+  __pyx_r = __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_8set_time_constant(((struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *)__pyx_v_self), ((PyObject *)__pyx_v_time_constant));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_8set_time_constant(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, PyObject *__pyx_v_time_constant) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("set_time_constant", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":98
+ *         return self.thisptr.control_attitude(control_data_s)
+ *     def set_time_constant(self, time_constant):
+ *         self.thisptr.set_time_constant(time_constant)             # <<<<<<<<<<<<<<
+ *     def set_k_p(self, k_p):
+ *         self.thisptr.set_k_p(k_p)
+ */
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_time_constant); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_v_self->thisptr->set_time_constant(__pyx_t_1);
+
+  /* "fw_test_harness/ecl_controller.pyx":97
+ *         cdef ECL_ControlData control_data_s
+ *         return self.thisptr.control_attitude(control_data_s)
+ *     def set_time_constant(self, time_constant):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_time_constant(time_constant)
+ *     def set_k_p(self, k_p):
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("fw_test_harness.ecl_controller.PyECLPitchController.set_time_constant", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fw_test_harness/ecl_controller.pyx":99
+ *     def set_time_constant(self, time_constant):
+ *         self.thisptr.set_time_constant(time_constant)
+ *     def set_k_p(self, k_p):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_k_p(k_p)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_11set_k_p(PyObject *__pyx_v_self, PyObject *__pyx_v_k_p); /*proto*/
+static PyObject *__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_11set_k_p(PyObject *__pyx_v_self, PyObject *__pyx_v_k_p) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_k_p (wrapper)", 0);
+  __pyx_r = __pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_10set_k_p(((struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *)__pyx_v_self), ((PyObject *)__pyx_v_k_p));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_15fw_test_harness_14ecl_controller_20PyECLPitchController_10set_k_p(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController *__pyx_v_self, PyObject *__pyx_v_k_p) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("set_k_p", 0);
+
+  /* "fw_test_harness/ecl_controller.pyx":100
+ *         self.thisptr.set_time_constant(time_constant)
+ *     def set_k_p(self, k_p):
+ *         self.thisptr.set_k_p(k_p)             # <<<<<<<<<<<<<<
+ */
+  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_k_p); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_v_self->thisptr->set_k_p(__pyx_t_1);
+
+  /* "fw_test_harness/ecl_controller.pyx":99
+ *     def set_time_constant(self, time_constant):
+ *         self.thisptr.set_time_constant(time_constant)
+ *     def set_k_p(self, k_p):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_k_p(k_p)
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("fw_test_harness.ecl_controller.PyECLPitchController.set_k_p", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_tp_new_15fw_test_harness_14ecl_controller_PyECLPitchController(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  PyObject *o;
+  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
+    o = (*t->tp_alloc)(t, 0);
+  } else {
+    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+  }
+  if (unlikely(!o)) return 0;
+  if (unlikely(__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) {
+    Py_DECREF(o); o = 0;
+  }
+  return o;
+}
+
+static void __pyx_tp_dealloc_15fw_test_harness_14ecl_controller_PyECLPitchController(PyObject *o) {
+  #if PY_VERSION_HEX >= 0x030400a1
+  if (unlikely(Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
+    if (PyObject_CallFinalizerFromDealloc(o)) return;
+  }
+  #endif
+  {
+    PyObject *etype, *eval, *etb;
+    PyErr_Fetch(&etype, &eval, &etb);
+    ++Py_REFCNT(o);
+    __pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_3__dealloc__(o);
+    --Py_REFCNT(o);
+    PyErr_Restore(etype, eval, etb);
+  }
+  (*Py_TYPE(o)->tp_free)(o);
+}
+
+static PyMethodDef __pyx_methods_15fw_test_harness_14ecl_controller_PyECLPitchController[] = {
+  {"control_attitude", (PyCFunction)__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_5control_attitude, METH_O, 0},
+  {"control_bodyrate", (PyCFunction)__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_7control_bodyrate, METH_O, 0},
+  {"set_time_constant", (PyCFunction)__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_9set_time_constant, METH_O, 0},
+  {"set_k_p", (PyCFunction)__pyx_pw_15fw_test_harness_14ecl_controller_20PyECLPitchController_11set_k_p, METH_O, 0},
+  {0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_15fw_test_harness_14ecl_controller_PyECLPitchController = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "fw_test_harness.ecl_controller.PyECLPitchController", /*tp_name*/
+  sizeof(struct __pyx_obj_15fw_test_harness_14ecl_controller_PyECLPitchController), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_15fw_test_harness_14ecl_controller_PyECLPitchController, /*tp_dealloc*/
+  0, /*tp_print*/
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  #if PY_MAJOR_VERSION < 3
+  0, /*tp_compare*/
+  #else
+  0, /*reserved*/
+  #endif
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_15fw_test_harness_14ecl_controller_PyECLPitchController, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  0, /*tp_dictoffset*/
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_15fw_test_harness_14ecl_controller_PyECLPitchController, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if PY_VERSION_HEX >= 0x030400a1
+  0, /*tp_finalize*/
+  #endif
+};
 
 static PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -584,8 +1508,31 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_s_acc_body_x, __pyx_k_acc_body_x, sizeof(__pyx_k_acc_body_x), 0, 0, 1, 1},
+  {&__pyx_n_s_acc_body_y, __pyx_k_acc_body_y, sizeof(__pyx_k_acc_body_y), 0, 0, 1, 1},
+  {&__pyx_n_s_acc_body_z, __pyx_k_acc_body_z, sizeof(__pyx_k_acc_body_z), 0, 0, 1, 1},
+  {&__pyx_n_s_airspeed, __pyx_k_airspeed, sizeof(__pyx_k_airspeed), 0, 0, 1, 1},
+  {&__pyx_n_s_airspeed_max, __pyx_k_airspeed_max, sizeof(__pyx_k_airspeed_max), 0, 0, 1, 1},
+  {&__pyx_n_s_airspeed_min, __pyx_k_airspeed_min, sizeof(__pyx_k_airspeed_min), 0, 0, 1, 1},
+  {&__pyx_n_s_lock_integrator, __pyx_k_lock_integrator, sizeof(__pyx_k_lock_integrator), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_pitch, __pyx_k_pitch, sizeof(__pyx_k_pitch), 0, 0, 1, 1},
+  {&__pyx_n_s_pitch_rate, __pyx_k_pitch_rate, sizeof(__pyx_k_pitch_rate), 0, 0, 1, 1},
+  {&__pyx_n_s_pitch_rate_setpoint, __pyx_k_pitch_rate_setpoint, sizeof(__pyx_k_pitch_rate_setpoint), 0, 0, 1, 1},
+  {&__pyx_n_s_pitch_setpoint, __pyx_k_pitch_setpoint, sizeof(__pyx_k_pitch_setpoint), 0, 0, 1, 1},
+  {&__pyx_n_s_roll, __pyx_k_roll, sizeof(__pyx_k_roll), 0, 0, 1, 1},
+  {&__pyx_n_s_roll_rate, __pyx_k_roll_rate, sizeof(__pyx_k_roll_rate), 0, 0, 1, 1},
+  {&__pyx_n_s_roll_rate_setpoint, __pyx_k_roll_rate_setpoint, sizeof(__pyx_k_roll_rate_setpoint), 0, 0, 1, 1},
+  {&__pyx_n_s_roll_setpoint, __pyx_k_roll_setpoint, sizeof(__pyx_k_roll_setpoint), 0, 0, 1, 1},
+  {&__pyx_n_s_scaler, __pyx_k_scaler, sizeof(__pyx_k_scaler), 0, 0, 1, 1},
+  {&__pyx_n_s_speed_body_u, __pyx_k_speed_body_u, sizeof(__pyx_k_speed_body_u), 0, 0, 1, 1},
+  {&__pyx_n_s_speed_body_v, __pyx_k_speed_body_v, sizeof(__pyx_k_speed_body_v), 0, 0, 1, 1},
+  {&__pyx_n_s_speed_body_w, __pyx_k_speed_body_w, sizeof(__pyx_k_speed_body_w), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_s_yaw, __pyx_k_yaw, sizeof(__pyx_k_yaw), 0, 0, 1, 1},
+  {&__pyx_n_s_yaw_rate, __pyx_k_yaw_rate, sizeof(__pyx_k_yaw_rate), 0, 0, 1, 1},
+  {&__pyx_n_s_yaw_rate_setpoint, __pyx_k_yaw_rate_setpoint, sizeof(__pyx_k_yaw_rate_setpoint), 0, 0, 1, 1},
+  {&__pyx_n_s_yaw_setpoint, __pyx_k_yaw_setpoint, sizeof(__pyx_k_yaw_setpoint), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
@@ -686,22 +1633,19 @@ PyMODINIT_FUNC PyInit_ecl_controller(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
+  if (PyType_Ready(&__pyx_type_15fw_test_harness_14ecl_controller_PyECLPitchController) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_15fw_test_harness_14ecl_controller_PyECLPitchController.tp_print = 0;
+  if (PyObject_SetAttrString(__pyx_m, "PyECLPitchController", (PyObject *)&__pyx_type_15fw_test_harness_14ecl_controller_PyECLPitchController) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_15fw_test_harness_14ecl_controller_PyECLPitchController = &__pyx_type_15fw_test_harness_14ecl_controller_PyECLPitchController;
   /*--- Type import code ---*/
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "fw_test_harness/ecl_controller.pyx":4
- *     cdef cppclass ECL_PitchController:
- *         ECL_PitchController()
- * cdef  ECL_PitchController *pc = new ECL_PitchController()             # <<<<<<<<<<<<<<
- */
-  __pyx_v_15fw_test_harness_14ecl_controller_pc = new ECL_PitchController();
-
   /* "fw_test_harness/ecl_controller.pyx":1
- * cdef extern from "ecl_pitch_controller.h":             # <<<<<<<<<<<<<<
- *     cdef cppclass ECL_PitchController:
- *         ECL_PitchController()
+ * from libcpp cimport bool             # <<<<<<<<<<<<<<
+ * 
+ * """Wraps the px4 ecl attitude controller"""
  */
   __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -746,6 +1690,128 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
+
+static CYTHON_INLINE void __Pyx_ErrRestore(PyObject *type, PyObject *value, PyObject *tb) {
+#if CYTHON_COMPILING_IN_CPYTHON
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    PyThreadState *tstate = PyThreadState_GET();
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+#else
+    PyErr_Restore(type, value, tb);
+#endif
+}
+static CYTHON_INLINE void __Pyx_ErrFetch(PyObject **type, PyObject **value, PyObject **tb) {
+#if CYTHON_COMPILING_IN_CPYTHON
+    PyThreadState *tstate = PyThreadState_GET();
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+#else
+    PyErr_Fetch(type, value, tb);
+#endif
+}
+
+static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
+                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
+                                  int full_traceback) {
+    PyObject *old_exc, *old_val, *old_tb;
+    PyObject *ctx;
+    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
+    if (full_traceback) {
+        Py_XINCREF(old_exc);
+        Py_XINCREF(old_val);
+        Py_XINCREF(old_tb);
+        __Pyx_ErrRestore(old_exc, old_val, old_tb);
+        PyErr_PrintEx(1);
+    }
+    #if PY_MAJOR_VERSION < 3
+    ctx = PyString_FromString(name);
+    #else
+    ctx = PyUnicode_FromString(name);
+    #endif
+    __Pyx_ErrRestore(old_exc, old_val, old_tb);
+    if (!ctx) {
+        PyErr_WriteUnraisable(Py_None);
+    } else {
+        PyErr_WriteUnraisable(ctx);
+        Py_DECREF(ctx);
+    }
+}
+
+static void __Pyx_RaiseArgtupleInvalid(
+    const char* func_name,
+    int exact,
+    Py_ssize_t num_min,
+    Py_ssize_t num_max,
+    Py_ssize_t num_found)
+{
+    Py_ssize_t num_expected;
+    const char *more_or_less;
+    if (num_found < num_min) {
+        num_expected = num_min;
+        more_or_less = "at least";
+    } else {
+        num_expected = num_max;
+        more_or_less = "at most";
+    }
+    if (exact) {
+        more_or_less = "exactly";
+    }
+    PyErr_Format(PyExc_TypeError,
+                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                 func_name, more_or_less, num_expected,
+                 (num_expected == 1) ? "" : "s", num_found);
+}
+
+static CYTHON_INLINE int __Pyx_CheckKeywordStrings(
+    PyObject *kwdict,
+    const char* function_name,
+    int kw_allowed)
+{
+    PyObject* key = 0;
+    Py_ssize_t pos = 0;
+#if CYTHON_COMPILING_IN_PYPY
+    if (!kw_allowed && PyDict_Next(kwdict, &pos, &key, 0))
+        goto invalid_keyword;
+    return 1;
+#else
+    while (PyDict_Next(kwdict, &pos, &key, 0)) {
+        #if PY_MAJOR_VERSION < 3
+        if (unlikely(!PyString_CheckExact(key)) && unlikely(!PyString_Check(key)))
+        #endif
+            if (unlikely(!PyUnicode_Check(key)))
+                goto invalid_keyword_type;
+    }
+    if ((!kw_allowed) && unlikely(key))
+        goto invalid_keyword;
+    return 1;
+invalid_keyword_type:
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() keywords must be strings", function_name);
+    return 0;
+#endif
+invalid_keyword:
+    PyErr_Format(PyExc_TypeError,
+    #if PY_MAJOR_VERSION < 3
+        "%.200s() got an unexpected keyword argument '%.200s'",
+        function_name, PyString_AsString(key));
+    #else
+        "%s() got an unexpected keyword argument '%U'",
+        function_name, key);
+    #endif
+    return 0;
+}
 
 static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
     int start = 0, mid = 0, end = count - 1;

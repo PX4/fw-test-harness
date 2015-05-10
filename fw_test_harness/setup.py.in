@@ -5,7 +5,7 @@ from Cython.Build import cythonize
 
 
 ext_modules = [
-    Extension("fw_attitude_controller",
+    Extension("ecl_controller",
     ["${CMAKE_CURRENT_SOURCE_DIR}/ecl_controller.pyx"],
     language="c++",              # this causes Pyrex/Cython to create C++ source
     include_dirs=["${CMAKE_SOURCE_DIR}/Firmware_custom",
@@ -26,5 +26,6 @@ setup(
     version='${PACKAGE_VERSION}',
     package_dir={ '': '${CMAKE_SOURCE_DIR}' },
     packages=['fw_test_harness'],
+    py_modules = ['simulator'],
     ext_modules = cythonize(ext_modules)
 )
