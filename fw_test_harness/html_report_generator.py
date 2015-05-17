@@ -60,10 +60,10 @@ class HtmlReportGenerator:
         :param title a string
         """
         fig = plt.figure(len(self.plots))
-        for k, v in plot_values.items():
-            plt.plot(time, v)
+        for v in plot_values:
+            plt.plot(time, v[1])
         plt.xlabel("time [s]")
-        plt.legend([ k for k in plot_values])
+        plt.legend([ v[0] for v in plot_values])
         self.plots[title] = fig
 
 

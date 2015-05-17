@@ -74,6 +74,11 @@ cdef void convert_control_data(control_data_l, ECL_ControlData *control_data_s):
     control_data_s.scaler = control_data_l["scaler"]
     control_data_s.lock_integrator = control_data_l["lock_integrator"]
 
+
+cdef extern from "ecl_roll_controller.h":
+    cdef cppclass ECL_RollController(ECL_Controller):
+        ECL_RollController() except +
+
 cdef extern from "ecl_pitch_controller.h":
     cdef cppclass ECL_PitchController(ECL_Controller):
         ECL_PitchController() except +
@@ -81,10 +86,16 @@ cdef extern from "ecl_pitch_controller.h":
         void set_max_rate_neg(float)
         void set_roll_ff(float)
 
-cdef class PyECLPitchController(object):
-    cdef ECL_PitchController *thisptr      # hold a C++ instance which we're wrapping
-    def __cinit__(self):
-        self.thisptr = new ECL_PitchController()
+cdef extern from "ecl_yaw_controller.h":
+    cdef cppclass ECL_YawController(ECL_Controller):
+        ECL_YawController() except +
+        void set_coordinated_min_speed(float)
+        void set_coordinated_method(int)
+
+# python API below
+
+cdef class PyECLController(object):
+    cdef ECL_Controller *thisptr      # hold a C++ instance which we're wrapping
     def __dealloc__(self):
         del self.thisptr
     def control_attitude(self, control_data):
@@ -93,8 +104,36 @@ cdef class PyECLPitchController(object):
         return self.thisptr.control_attitude(control_data_s)
     def control_bodyrate(self, control_data):
         cdef ECL_ControlData control_data_s
-        return self.thisptr.control_attitude(control_data_s)
+        convert_control_data(control_data, &control_data_s)
+        return self.thisptr.control_bodyrate(control_data_s)
     def set_time_constant(self, time_constant):
         self.thisptr.set_time_constant(time_constant)
     def set_k_p(self, k_p):
         self.thisptr.set_k_p(k_p)
+    def set_k_i(self, k_i):
+        self.thisptr.set_k_i(k_i)
+    def set_k_ff(self, k_ff):
+        self.thisptr.set_k_ff(k_ff)
+
+cdef class PyECLRollController(PyECLController):
+    def __cinit__(self):
+        self.thisptr = new ECL_RollController()
+
+cdef class PyECLPitchController(PyECLController):
+    def __cinit__(self):
+        self.thisptr = new ECL_PitchController()
+    def set_max_rate_pos(self, max_rate_pos):
+        (<ECL_PitchController*>self.thisptr).set_max_rate_pos(max_rate_pos)
+    def set_max_rate_neg(self, max_rate_neg):
+        (<ECL_PitchController*>self.thisptr).set_max_rate_neg(max_rate_neg)
+    def set_roll_ff(self, roll_ff):
+        (<ECL_PitchController*>self.thisptr).set_roll_ff(roll_ff)
+
+cdef class PyECLYawController(PyECLController):
+    def __cinit__(self):
+        self.thisptr = new ECL_YawController()
+    def set_coordinated_min_speed(self, cord_min_speed):
+        (<ECL_YawController*>self.thisptr).set_coordinated_min_speed(cord_min_speed)
+    def set_coordinated_method(self, method):
+        (<ECL_YawController*>self.thisptr).set_coordinated_method(method)
+
