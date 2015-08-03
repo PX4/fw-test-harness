@@ -9,7 +9,8 @@ ext_modules = [
     ["${CMAKE_CURRENT_SOURCE_DIR}/ecl_controller.pyx"],
     language="c++",              # this causes Pyrex/Cython to create C++ source
     include_dirs=["${CMAKE_SOURCE_DIR}/Firmware_custom",
-                  "${FIRMWARE_DIR}src/lib/ecl/attitude_fw/",
+                  "${FIRMWARE_CUSTOM_DIR}platforms",
+                  "${FIRMWARE_DIR}src/lib/ecl/attitude_fw",
                   "${FIRMWARE_DIR}src/modules",
                   "${FIRMWARE_DIR}src/src/lib",
                   "${FIRMWARE_DIR}src/src"

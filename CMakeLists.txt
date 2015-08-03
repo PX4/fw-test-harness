@@ -17,6 +17,7 @@ find_package(Eigen REQUIRED)
 
 # include dirs, order is relevant, our customizations need to be in 1st place
 include_directories(${FIRMWARE_CUSTOM_DIR})
+include_directories(${FIRMWARE_CUSTOM_DIR}/platforms)
 include_directories(${FIRMWARE_DIR}src/modules)
 include_directories(${FIRMWARE_DIR}src/lib)
 include_directories(${FIRMWARE_DIR}src)
@@ -29,7 +30,6 @@ add_library(attitude_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_roll_controller.cpp
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_yaw_controller.cpp
   ${FIRMWARE_DIR}src/platforms/ros/perf_counter.cpp
-  ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
   )
 

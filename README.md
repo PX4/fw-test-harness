@@ -17,7 +17,7 @@ make
 
 ## Run
 ```
-cd module
+cd fw_test_harness
 python2 simulator.py
 ```
 
