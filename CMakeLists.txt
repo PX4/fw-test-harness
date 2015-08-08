@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.6)
 project (fw-test-harness)
 
+set(CMAKE_CXX_STANDARD 11)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_FLAGS "-Wall -Werror -std=c++11")
@@ -12,14 +14,19 @@ set(FIRMWARE_CUSTOM_DIR ${CMAKE_SOURCE_DIR}/Firmware_custom/)
 add_definitions(-D__EXPORT=)
 add_definitions(-DM_PI_2_F=\(float\)M_PI_2)
 add_definitions(-D_GLIBCXX_USE_C99_MATH)
+add_definitions(-D__PX4_POSIX=)
 
 find_package(Eigen REQUIRED)
 
 # include dirs, order is relevant, our customizations need to be in 1st place
 include_directories(${FIRMWARE_CUSTOM_DIR})
 include_directories(${FIRMWARE_CUSTOM_DIR}/platforms)
+include_directories(${FIRMWARE_DIR}src/platforms)
+include_directories(${FIRMWARE_DIR}src/platforms/posix/include)
 include_directories(${FIRMWARE_DIR}src/modules)
+include_directories(${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs)
 include_directories(${FIRMWARE_DIR}src/lib)
+include_directories(${FIRMWARE_DIR}src/include)
 include_directories(${FIRMWARE_DIR}src)
 include_directories(${EIGEN_INCLUDE_DIR})
 
@@ -31,6 +38,13 @@ add_library(attitude_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_yaw_controller.cpp
   ${FIRMWARE_DIR}src/platforms/ros/perf_counter.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
+  )
+
+add_library(mtecs SHARED
+  ${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs/mTecs.cpp
+  ${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs/limitoverride.cpp
+  ${FIRMWARE_DIR}src/modules/controllib/block/Block.cpp
+  ${FIRMWARE_DIR}src/modules/controllib/block/Block.cpp
   )
 
 # add python module

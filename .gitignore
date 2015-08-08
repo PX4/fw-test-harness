@@ -63,4 +63,4 @@ tmp*
 tags
 
 # cython output
-fw_test_harness/*.c
+fw_test_harness/*.cpp

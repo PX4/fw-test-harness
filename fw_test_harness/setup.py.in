@@ -3,21 +3,40 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Build import cythonize
 
+include_dirs=["${CMAKE_SOURCE_DIR}/Firmware_custom",
+                  "${FIRMWARE_CUSTOM_DIR}platforms",
+                  "${FIRMWARE_DIR}src/lib/ecl/attitude_fw",
+                  "${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs",
+                  "${FIRMWARE_DIR}src/modules",
+                  "${FIRMWARE_DIR}src/lib",
+                  "${FIRMWARE_DIR}src/include",
+                  "${FIRMWARE_DIR}src",
+                  "${FIRMWARE_DIR}src/platforms",
+                  "${FIRMWARE_DIR}src/platforms/posix/include"
+                  ]
+define_macros = [('__EXPORT', ''), ('__PX4_POSIX', '')]
+extra_compile_args = ["-std=c++11"]
 
 ext_modules = [
     Extension("ecl_controller",
     ["${CMAKE_CURRENT_SOURCE_DIR}/ecl_controller.pyx"],
     language="c++",              # this causes Pyrex/Cython to create C++ source
-    include_dirs=["${CMAKE_SOURCE_DIR}/Firmware_custom",
-                  "${FIRMWARE_CUSTOM_DIR}platforms",
-                  "${FIRMWARE_DIR}src/lib/ecl/attitude_fw",
-                  "${FIRMWARE_DIR}src/modules",
-                  "${FIRMWARE_DIR}src/src/lib",
-                  "${FIRMWARE_DIR}src/src"
-                  ],
-    define_macros=[('__EXPORT', '')],
+    include_dirs=include_dirs,
+    define_macros=define_macros,
     library_dirs=['${CMAKE_BINARY_DIR}'],
     libraries=["attitude_controller"],
+    extra_compile_args=extra_compile_args,
+    extra_link_args=[]
+              ),
+
+    Extension("mtecs",
+    ["${CMAKE_CURRENT_SOURCE_DIR}/mtecs.pyx"],
+    language="c++",              # this causes Pyrex/Cython to create C++ source
+    include_dirs=include_dirs,
+    define_macros=define_macros,
+    library_dirs=['${CMAKE_BINARY_DIR}'],
+    libraries=["mtecs"],
+    extra_compile_args=extra_compile_args,
     extra_link_args=[]
               )
 ]
