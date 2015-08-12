@@ -38,13 +38,19 @@ add_library(attitude_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_yaw_controller.cpp
   ${FIRMWARE_DIR}src/platforms/ros/perf_counter.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
+  ${FIRMWARE_DIR}src/platforms/common/px4_log.c
+  ${FIRMWARE_CUSTOM_DIR}platforms/drv_hrt.c
   )
 
 add_library(mtecs SHARED
   ${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs/mTecs.cpp
   ${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs/limitoverride.cpp
   ${FIRMWARE_DIR}src/modules/controllib/block/Block.cpp
-  ${FIRMWARE_DIR}src/modules/controllib/block/Block.cpp
+  ${FIRMWARE_DIR}src/modules/controllib/block/BlockParam.cpp
+  ${FIRMWARE_DIR}src/modules/controllib/blocks.cpp
+  ${FIRMWARE_CUSTOM_DIR}platforms/drv_hrt.c
+  ${FIRMWARE_CUSTOM_DIR}param/param.c
+  ${FIRMWARE_DIR}src/lib/mathlib/math/test/test.cpp # needed by blocks
   )
 
 # add python module

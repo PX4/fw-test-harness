@@ -31,3 +31,4 @@
 #define M_DEG_TO_RAD 		0.01745329251994
 #define M_RAD_TO_DEG 		57.2957795130823
 
+#define ASSERT(x) assert(x)

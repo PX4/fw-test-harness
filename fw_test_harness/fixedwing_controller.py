@@ -2,6 +2,7 @@
 import math
 from ecl_controller import PyECLRollController, PyECLPitchController, \
     PyECLYawController
+from mtecs import PyMTecs
 
 class FixedWingController:
 
@@ -9,6 +10,8 @@ class FixedWingController:
 
     def __init__(self, params):
         """Constructor"""
+
+        # Attitude Control
         self.c_roll = PyECLRollController()
         self.c_pitch = PyECLPitchController()
         self.c_yaw = PyECLYawController()
@@ -33,6 +36,9 @@ class FixedWingController:
         self.c_yaw.set_k_ff(k_ff)
         self.c_yaw.set_coordinated_min_speed(params["coordinated_min_speed"])
         self.c_yaw.set_coordinated_method(params["coordinated_method"])
+
+        # Altitude and speed control (total energy control)
+        self.c_te = PyMTecs()
 
     def control(self, **kwargs):
         """
