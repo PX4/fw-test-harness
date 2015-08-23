@@ -49,7 +49,8 @@ add_library(mtecs SHARED
   ${FIRMWARE_DIR}src/modules/controllib/block/BlockParam.cpp
   ${FIRMWARE_DIR}src/modules/controllib/blocks.cpp
   ${FIRMWARE_CUSTOM_DIR}platforms/drv_hrt.c
-  ${FIRMWARE_CUSTOM_DIR}param/param.c
+  ${FIRMWARE_CUSTOM_DIR}param/param.cpp
+  # ${FIRMWARE_CUSTOM_DIR}param/param_load.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/test/test.cpp # needed by blocks
   )
 

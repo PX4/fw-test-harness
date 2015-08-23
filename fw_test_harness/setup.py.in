@@ -4,15 +4,16 @@ from distutils.extension import Extension
 from Cython.Build import cythonize
 
 include_dirs=["${CMAKE_SOURCE_DIR}/Firmware_custom",
-                  "${FIRMWARE_CUSTOM_DIR}platforms",
-                  "${FIRMWARE_DIR}src/lib/ecl/attitude_fw",
-                  "${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs",
-                  "${FIRMWARE_DIR}src/modules",
-                  "${FIRMWARE_DIR}src/lib",
-                  "${FIRMWARE_DIR}src/include",
-                  "${FIRMWARE_DIR}src",
-                  "${FIRMWARE_DIR}src/platforms",
-                  "${FIRMWARE_DIR}src/platforms/posix/include"
+              "${FIRMWARE_CUSTOM_DIR}platforms",
+              "${FIRMWARE_DIR}src/lib/ecl/attitude_fw",
+              "${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs",
+              "${FIRMWARE_DIR}src/modules",
+              "${FIRMWARE_DIR}src/lib",
+              "${FIRMWARE_DIR}src/include",
+              "${FIRMWARE_DIR}src",
+              "${FIRMWARE_DIR}src/platforms",
+              "${FIRMWARE_DIR}src/platforms/posix/include",
+              "${FIRMWARE_CUSTOM_DIR}/param"
                   ]
 define_macros = [('__EXPORT', ''), ('__PX4_POSIX', '')]
 extra_compile_args = ["-std=c++11"]

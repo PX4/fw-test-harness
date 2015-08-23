@@ -24,28 +24,31 @@ class Simulator:
         self.fdm.load_model("c172p")
 
         # settings
-        self.sim_end_time_s = 60
-        self.dt = 0.02
+        self.sim_end_time_s = 120
+        self.dt = 0.005
+        self.dt_total_energy = 0.02
         self.ic = {
             "hgt": 400 * ureg.meter
         }
+        #  self.mode = "attitude"
+        self.mode = "position"
 
         self.parameters = {
-            "airspeed_trim": 30,
-            "airspeed_min": 25.0,
+            "airspeed_trim": 35.0,
+            "airspeed_min": 10.0,
             "airspeed_max": 200.0,
             "coordinated_min_speed": 1000.0,
             "coordinated_method": 0.0,
             "att_tc": 0.5,
-            "k_p": 1,
-            "k_ff": 0.2,
-            "k_i": 0.01,
+            "k_p": 0.08,
+            "k_ff": 0.4,
+            "k_i": 0.1,
             "pitch_max_rate_pos": 0.0, # 0: disable
             "pitch_max_rate_neg": 0.0, # 0: disable
             "pitch_roll_ff": 0.0,
         }
 
-        self.controller = FixedWingController(self.parameters)
+        self.controller = FixedWingController(self.parameters, self.dt_total_energy/self.dt, self.mode)
 
     def init_sim(self):
         """init/reset simulation"""
@@ -68,6 +71,8 @@ class Simulator:
             "accelerations/vdot-ft_sec2": [0],
             "accelerations/wdot-ft_sec2": [0],
             "velocities/vt-fps": [ureg.Quantity(self.parameters["airspeed_trim"], "m/s").to(ureg["ft/s"]).magnitude],    # XXX is this true airspeed, check...
+            "flight-path/gamma-rad": [0],
+            "propulsion/engine/thrust-lbs": [0]
             }
         self.jsbs_ic = {
             "ic/h-sl-ft": [self.ic["hgt"].to(ureg.foot).magnitude],
@@ -78,7 +83,10 @@ class Simulator:
             "fcs/aileron-cmd-norm": [0],
             "fcs/elevator-cmd-norm": [0],
             "fcs/rudder-cmd-norm": [0],
-            "fcs/throttle-cmd-norm": [0.5]
+            "fcs/throttle-cmd-norm": [0.0],
+            "fcs/mixture-cmd-norm": [0.87],
+            "propulsion/magneto_cmd": [3],
+            "propulsion/starter_cmd": [1]
             }
         self.sim_states = {
             "t": [0.0],
@@ -122,6 +130,8 @@ class Simulator:
         x["airspeed"] = ureg.Quantity(
             self.jsbs_states["velocities/vt-fps"][-1],
             "ft/s").to(ureg["m/s"]).magnitude
+        x["altitude"] = self.jsbs_states["position/h-sl-meters"][-1]
+        x["flightpath_angle"] = self.jsbs_states["flight-path/gamma-rad"][-1]
 
         # additonal/secondary data that is not a satein the physical sense but is needed
         # by the controller and describes the aircraft state as well:
@@ -143,6 +153,8 @@ class Simulator:
         r["roll_rate"] = 0.0
         r["pitch_rate"] = 0.0
         r["yaw_rate"] = 0.0
+        r["altitude"] = self.ic["hgt"].magnitude
+        r["velocity"] = self.parameters["airspeed_trim"]
 
         return r
 
@@ -157,10 +169,11 @@ class Simulator:
         u, control_data = self.controller.control(state=self.get_state(),
                                            setpoint=self.get_sp(),
                                            parameters = self.parameters)
-        self.jsbs_inputs["fcs/aileron-cmd-norm"].append(u[0])
-        self.jsbs_inputs["fcs/elevator-cmd-norm"].append(-u[1])
+        self.jsbs_inputs["fcs/aileron-cmd-norm"].append(u[0]*100.0) #XXX scaling
+        self.jsbs_inputs["fcs/elevator-cmd-norm"].append(-u[1]*100.0) #XXX scaling
         self.jsbs_inputs["fcs/rudder-cmd-norm"].append(u[2])
-        self.jsbs_inputs["fcs/throttle-cmd-norm"].append(0.5)
+        self.jsbs_inputs["fcs/throttle-cmd-norm"].append(u[3])
+
 
         # copy control data to for later plotting
         for k,v in control_data.items():
@@ -217,27 +230,54 @@ class Simulator:
 
         # pitch pitchrate sp figure
         rg.create_add_plot(self.sim_states["t"],
-                           [["Pitch [deg]",
-                             ureg.Quantity(
-                                 self.jsbs_states["attitude/theta-rad"],
-                                 "rad").to(ureg.deg).magnitude],
-                            ["pitch rate sp [deg/s]",
-                             ureg.Quantity(
-                                 self.control_data_log["pitch_rate_setpoint"],
-                                 "rad/s").to(ureg["deg/s"]).magnitude],
-                            ], "Pitch and pitchrate sp")
+                           [
+                               ["pitch sp [deg]",
+                                ureg.Quantity(
+                                    self.control_data_log["pitch_setpoint"],
+                                    "rad").to(ureg.deg).magnitude],
+                               ["Pitch [deg]",
+                                ureg.Quantity(
+                                    self.jsbs_states["attitude/theta-rad"],
+                                    "rad").to(ureg.deg).magnitude],
+                               ["pitch rate sp [deg/s]",
+                                ureg.Quantity(
+                                    self.control_data_log["pitch_rate_setpoint"],
+                                    "rad/s").to(ureg["deg/s"]).magnitude],
+                           ], "Pitch and pitchrate sp")
 
         # altitude pitch airspeed figure
         rg.create_add_plot(self.sim_states["t"],
-                           [["h [m]", self.jsbs_states["position/h-sl-meters"]],
-                            ["pitch [deg]",
-                            ureg.Quantity(
-                            self.jsbs_states["attitude/theta-rad"],
-                            "rad").to(ureg.deg).magnitude],
-                            ["V_true [m/s]",
-                              ureg.Quantity(
-                              self.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude]
-                            ], "Altitude, Pitch and Airspeed")
+                           [
+                               ["h [m]", self.jsbs_states["position/h-sl-meters"]],
+                               ["pitch sp [deg]",
+                                ureg.Quantity(
+                                    self.control_data_log["pitch_setpoint"],
+                                    "rad").to(ureg.deg).magnitude],
+                               ["pitch [deg]",
+                                ureg.Quantity(
+                                    self.jsbs_states["attitude/theta-rad"],
+                                    "rad").to(ureg.deg).magnitude],
+                               ["V_true [m/s]",
+                                ureg.Quantity(
+                                    self.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
+                               ["throttle", self.control_data_log["throttle_setpoint"]],
+                           ], "Altitude, Pitch and Airspeed")
+
+        # flightpath angle
+        rg.create_add_plot(self.sim_states["t"],
+                           [
+                               ["flight path angle [deg]",
+                                ureg.Quantity(
+                                    self.jsbs_states["flight-path/gamma-rad"],
+                                    "rad").to(ureg.deg).magnitude],
+                           ], "Flight Path Angle")
+
+        # propulsion
+        rg.create_add_plot(self.sim_states["t"],
+                           [
+                               ["throttle", self.control_data_log["throttle_setpoint"]],
+                               ["propulsion thrust [kg]", ureg.Quantity(self.jsbs_states["propulsion/engine/thrust-lbs"], "lbs").to("kg")],
+                           ], "Propulsion")
 
 
 
