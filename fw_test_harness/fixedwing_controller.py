@@ -24,13 +24,16 @@ class FixedWingController:
         k_p = params["k_p"]
         k_ff = params["k_ff"]
         k_i = params["k_i"]
+        i_max = params["i_max"]
         self.c_roll.set_time_constant(att_tc)
         self.c_roll.set_k_p(k_p)
         self.c_roll.set_k_i(k_i)
+        self.c_roll.set_integrator_max(i_max)
         self.c_roll.set_k_ff(k_ff)
         self.c_pitch.set_time_constant(att_tc)
         self.c_pitch.set_k_p(k_p)
         self.c_pitch.set_k_i(k_i)
+        self.c_pitch.set_integrator_max(i_max)
         self.c_pitch.set_k_ff(k_ff)
         self.c_pitch.set_max_rate_pos(params["pitch_max_rate_pos"])
         self.c_pitch.set_max_rate_neg(params["pitch_max_rate_neg"])
@@ -38,6 +41,7 @@ class FixedWingController:
         self.c_yaw.set_time_constant(att_tc)
         self.c_yaw.set_k_p(k_p)
         self.c_yaw.set_k_i(k_i)
+        self.c_yaw.set_integrator_max(i_max)
         self.c_yaw.set_k_ff(k_ff)
         self.c_yaw.set_coordinated_min_speed(params["coordinated_min_speed"])
         self.c_yaw.set_coordinated_method(params["coordinated_method"])

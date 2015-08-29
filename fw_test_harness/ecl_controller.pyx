@@ -112,6 +112,8 @@ cdef class PyECLController(object):
         self.thisptr.set_k_p(k_p)
     def set_k_i(self, k_i):
         self.thisptr.set_k_i(k_i)
+    def set_integrator_max(self, i_max):
+        self.thisptr.set_integrator_max(i_max)
     def set_k_ff(self, k_ff):
         self.thisptr.set_k_ff(k_ff)
 
