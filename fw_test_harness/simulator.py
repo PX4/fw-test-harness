@@ -2,6 +2,7 @@
 from __future__ import print_function, division, absolute_import, \
     unicode_literals
 import os
+import sys
 from jsbsim import FGFDMExec
 import matplotlib.pyplot as plt
 import argparse
@@ -21,7 +22,7 @@ class Simulator:
         self.args = args
 
         self.fdm = FGFDMExec(root_dir=args["jsbsim_root"])
-        self.fdm.load_model("c172p")
+        self.fdm.load_model("Rascal110-JSBSim")
 
         # settings
         self.sim_end_time_s = 120
@@ -30,23 +31,25 @@ class Simulator:
         self.ic = {
             "hgt": 400 * ureg.meter
         }
-        #  self.mode = "attitude"
-        self.mode = "position"
+        self.mode = "attitude"
+        #  self.mode = "position"
 
         self.parameters = {
-            "airspeed_trim": 35.0,
-            "airspeed_min": 10.0,
-            "airspeed_max": 200.0,
+            "airspeed_trim": 15.0,
+            "airspeed_min": 7.0,
+            "airspeed_max": 60.0,
             "coordinated_min_speed": 1000.0,
             "coordinated_method": 0.0,
             "att_tc": 0.5,
             "k_p": 0.08,
             "k_ff": 0.4,
-            "k_i": 0.1,
+            "k_i": 0.01,
+            "i_max": 0.4,
             "pitch_max_rate_pos": 0.0, # 0: disable
             "pitch_max_rate_neg": 0.0, # 0: disable
             "pitch_roll_ff": 0.0,
         }
+        self.control_surface_scaler = 1.0
 
         self.controller = FixedWingController(self.parameters, self.dt_total_energy/self.dt, self.mode)
 
@@ -133,7 +136,7 @@ class Simulator:
         x["altitude"] = self.jsbs_states["position/h-sl-meters"][-1]
         x["flightpath_angle"] = self.jsbs_states["flight-path/gamma-rad"][-1]
 
-        # additonal/secondary data that is not a satein the physical sense but is needed
+        # additonal/secondary data that is not a state in the physical sense but is needed
         # by the controller and describes the aircraft state as well:
         if x["airspeed"] > self.parameters["airspeed_min"]:
             x["scaler"] = self.parameters["airspeed_trim"] / x["airspeed"]
@@ -169,9 +172,9 @@ class Simulator:
         u, control_data = self.controller.control(state=self.get_state(),
                                            setpoint=self.get_sp(),
                                            parameters = self.parameters)
-        self.jsbs_inputs["fcs/aileron-cmd-norm"].append(u[0]*100.0) #XXX scaling
-        self.jsbs_inputs["fcs/elevator-cmd-norm"].append(-u[1]*100.0) #XXX scaling
-        self.jsbs_inputs["fcs/rudder-cmd-norm"].append(u[2])
+        self.jsbs_inputs["fcs/aileron-cmd-norm"].append(u[0] * self.control_surface_scaler)
+        self.jsbs_inputs["fcs/elevator-cmd-norm"].append(-u[1] * self.control_surface_scaler)
+        self.jsbs_inputs["fcs/rudder-cmd-norm"].append(u[2] * self.control_surface_scaler)
         self.jsbs_inputs["fcs/throttle-cmd-norm"].append(u[3])
 
 
@@ -303,7 +306,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--jsbsim_root',
         dest='jsbsim_root',
-        default=os.path.expanduser('../external/jsbsim/'))          # XXX remove ugly hardcoded path
+        default=os.path.dirname(os.path.realpath(sys.argv[0])) + '/../external/')
     parser.add_argument('-o', dest='filename_out', default='report.html')
     args = parser.parse_args()
     s = Simulator(vars(args))
