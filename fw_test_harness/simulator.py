@@ -31,11 +31,11 @@ class Simulator:
         self.ic = {
             "hgt": 400 * ureg.meter
         }
-        self.mode = "attitude"
-        #  self.mode = "position"
+        #  self.mode = "attitude"
+        self.mode = "position"
 
         self.parameters = {
-            "airspeed_trim": 15.0,
+            "airspeed_trim": 20.0,
             "airspeed_min": 7.0,
             "airspeed_max": 60.0,
             "coordinated_min_speed": 1000.0,
@@ -43,11 +43,20 @@ class Simulator:
             "att_tc": 0.5,
             "k_p": 0.08,
             "k_ff": 0.4,
-            "k_i": 0.01,
+            "k_i": 0.05,
             "i_max": 0.4,
             "pitch_max_rate_pos": 0.0, # 0: disable
             "pitch_max_rate_neg": 0.0, # 0: disable
             "pitch_roll_ff": 0.0,
+            "throttle_default": 0.1,
+            "mtecs_acc_p": 0.01,
+            "mtecs_fpa_p": 0.01,
+            "mtecs_throttle_ff": 0.0,
+            "mtecs_throttle_p": 0.1,
+            "mtecs_throttle_i": 0.25,
+            "mtecs_pitch_ff": 0.0,
+            "mtecs_pitch_p": 0.1,
+            "mtecs_pitch_i": 0.03,
         }
         self.control_surface_scaler = 1.0
 
@@ -96,6 +105,8 @@ class Simulator:
             "roll:": [0.0],
             "pitch:": [0.0]
         }
+        self.setpoints = {}
+        self.update_setpoints()
 
         self.control_data_log = {}
 
@@ -147,7 +158,7 @@ class Simulator:
 
         return x
 
-    def get_sp(self):
+    def calc_setpoints(self):
         """Generate setpoint to be used in the controller"""
         r = {}
         r["roll"] = 0.0
@@ -161,6 +172,12 @@ class Simulator:
 
         return r
 
+    def update_setpoints(self):
+        """updates the setpoint"""
+        sp = self.calc_setpoints()
+        for k, v in sp.items():
+            self.setpoints.setdefault(k,[]).append(v)
+
     def step(self):
         """Perform one simulation step
         implementation is accoding to FGFDMExec's own simulate but we don't
@@ -169,8 +186,9 @@ class Simulator:
         # control
         # self.jsbs_inputs["fcs/elevator-cmd-norm"].append(0.01 * (400 -
         # self.jsbs_states["position/h-sl-meters"][-1]))
+        self.update_setpoints()
         u, control_data = self.controller.control(state=self.get_state(),
-                                           setpoint=self.get_sp(),
+                                                  setpoint={k: v[-1] for k, v in self.setpoints.items()},
                                            parameters = self.parameters)
         self.jsbs_inputs["fcs/aileron-cmd-norm"].append(u[0] * self.control_surface_scaler)
         self.jsbs_inputs["fcs/elevator-cmd-norm"].append(-u[1] * self.control_surface_scaler)
@@ -281,6 +299,22 @@ class Simulator:
                                ["throttle", self.control_data_log["throttle_setpoint"]],
                                ["propulsion thrust [kg]", ureg.Quantity(self.jsbs_states["propulsion/engine/thrust-lbs"], "lbs").to("kg")],
                            ], "Propulsion")
+        
+        # altitude
+        rg.create_add_plot(self.sim_states["t"],
+                           [
+                               ["h sp [m]", self.setpoints["altitude"]],
+                               ["h [m]", self.jsbs_states["position/h-sl-meters"]],
+                           ], "Altitude Setpoint and Altitude")
+        
+        # velocity
+        rg.create_add_plot(self.sim_states["t"],
+                           [
+                               ["V sp [m/s]", self.setpoints["velocity"]],
+                               ["V_true [m/s]",
+                                ureg.Quantity(
+                                    self.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
+                           ], "Velocity Setpoint and Velocity")
 
 
 

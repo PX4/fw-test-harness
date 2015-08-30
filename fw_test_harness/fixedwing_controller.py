@@ -15,6 +15,7 @@ class FixedWingController:
         :param control_total_energy_divider run total enery controller every xth time
         """
         self.mode = mode
+        self.params = params
 
         # Attitude Control
         self.c_roll = PyECLRollController()
@@ -50,13 +51,13 @@ class FixedWingController:
         # XXX load values from params argument where it makes sense
         c_te_params = {
             "MT_ENABLED": 1,
-            "MT_THR_FF": 0.7,
-            "MT_THR_P": 0.1,
-            "MT_THR_I": 0.25,
-            "MT_THR_OFF": 0.7,
-            "MT_PIT_FF": 0.4,
-            "MT_PIT_P": 0.03,
-            "MT_PIT_I": 0.03,
+            "MT_THR_FF": params["mtecs_throttle_ff"],
+            "MT_THR_P": params["mtecs_throttle_p"],
+            "MT_THR_I": params["mtecs_throttle_i"],
+            "MT_THR_OFF": params["throttle_default"],
+            "MT_PIT_FF": params["mtecs_pitch_ff"],
+            "MT_PIT_P": params["mtecs_pitch_p"],
+            "MT_PIT_I": params["mtecs_pitch_i"],
             "MT_PIT_OFF": 0.0,
             "MT_THR_MIN": 0.0,
             "MT_THR_MAX": 1.0,
@@ -64,14 +65,14 @@ class FixedWingController:
             "MT_PIT_MAX": 20.0,
             "MT_ALT_LP": 1.0,
             "MT_FPA_LP": 1.0,
-            "MT_FPA_P": 0.3,
+            "MT_FPA_P": params["mtecs_fpa_p"],
             "MT_FPA_D": 0.0,
             "MT_FPA_D_LP": 1.0,
             "MT_FPA_MIN": -20.0,
             "MT_FPA_MAX": 30.0,
             "MT_A_LP": 0.5,
             "MT_AD_LP": 0.5,
-            "MT_ACC_P": 0.3,
+            "MT_ACC_P": params["mtecs_acc_p"],
             "MT_ACC_D": 0.0,
             "MT_ACC_D_LP": 0.5,
             "MT_ACC_MIN": -40.0,
@@ -170,7 +171,7 @@ class FixedWingController:
             control_data["pitch_setpoint"] = self.c_te.getPitchSetpoint()
             throttle = self.c_te.getThrottleSetpoint()
         else:
-            throttle = 0.65
+            throttle = self.params["throttle_default"]
         control_data["throttle_setpoint"] = throttle
 
         control_data["roll_rate_setpoint"] = self.c_roll.control_attitude(control_data)
