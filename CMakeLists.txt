@@ -38,7 +38,7 @@ add_library(attitude_controller SHARED
   ${FIRMWARE_DIR}src/lib/ecl/attitude_fw/ecl_yaw_controller.cpp
   ${FIRMWARE_DIR}src/platforms/ros/perf_counter.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/Limits.cpp
-  ${FIRMWARE_DIR}src/platforms/common/px4_log.c
+  ${FIRMWARE_DIR}src/platforms/posix/px4_layer/px4_log.c
   ${FIRMWARE_CUSTOM_DIR}platforms/drv_hrt.c
   )
 
