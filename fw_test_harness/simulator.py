@@ -9,6 +9,7 @@ import argparse
 from pint import UnitRegistry
 from html_report_generator import HtmlReportGenerator
 from fixedwing_controller import FixedWingController
+import pyprind
 
 ureg = UnitRegistry()
 
@@ -327,9 +328,15 @@ class Simulator:
         self.init_sim()
 
         # run simulation
+        bar = pyprind.ProgBar(self.sim_end_time_s)
+        time_last_bar_update = 0
         while self.sim_states["t"][-1] < self.sim_end_time_s:
             self.sim_states["t"].append(self.step())
+            if self.sim_states["t"][-1] >= time_last_bar_update + 1: # throttle update of progress bar
+                bar.update()
+                time_last_bar_update = self.sim_states["t"][-1]
 
+        bar.update()
         self.output_results()
 
 if __name__ == "__main__":

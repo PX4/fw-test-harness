@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # dependencies
-pip2 install --user mpld3 jinja2 yattag
+pip2 install --user mpld3 jinja2 yattag pyprind
 
 # jsbsim
 git submodule init
