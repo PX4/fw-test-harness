@@ -1,4 +1,7 @@
-# Fixedwing Test Harness
+# Fixed-wing Test Harness
+A simulation wrapper around the PX4 fixed-wing control stack. Flight dynamics is simulated with jsbsim. A html report with interactive graphs is generated after the simulation to which new plots can be added quickly.
+
+The simulation is currently using the standard px4 attitude controller together with mTECS for altitude/speed control.
 
 ## Setup
 ### Archlinux
@@ -15,11 +18,14 @@ cmake ..
 make
 ```
 
-## Run
+# Run
 ```
 cd fw_test_harness
 python2 simulator.py
 ```
+
+# Add a plot
+See the output_results function in simulator.py
 
 # some related .profile entries (need to improve packaging)
 ```
