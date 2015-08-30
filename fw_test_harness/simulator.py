@@ -106,7 +106,7 @@ class Simulator:
             "pitch:": [0.0]
         }
         self.setpoints = {}
-        self.update_setpoints()
+        self.update_setpoints(0)
 
         self.control_data_log = {}
 
@@ -158,7 +158,7 @@ class Simulator:
 
         return x
 
-    def calc_setpoints(self):
+    def calc_setpoints(self, time):
         """Generate setpoint to be used in the controller"""
         r = {}
         r["roll"] = 0.0
@@ -167,14 +167,14 @@ class Simulator:
         r["roll_rate"] = 0.0
         r["pitch_rate"] = 0.0
         r["yaw_rate"] = 0.0
-        r["altitude"] = self.ic["hgt"].magnitude
+        r["altitude"] = self.ic["hgt"].magnitude if time < 20 else self.ic["hgt"].magnitude + 10
         r["velocity"] = self.parameters["airspeed_trim"]
 
         return r
 
-    def update_setpoints(self):
+    def update_setpoints(self, time):
         """updates the setpoint"""
-        sp = self.calc_setpoints()
+        sp = self.calc_setpoints(time)
         for k, v in sp.items():
             self.setpoints.setdefault(k,[]).append(v)
 
@@ -186,7 +186,7 @@ class Simulator:
         # control
         # self.jsbs_inputs["fcs/elevator-cmd-norm"].append(0.01 * (400 -
         # self.jsbs_states["position/h-sl-meters"][-1]))
-        self.update_setpoints()
+        self.update_setpoints(self.fdm.get_sim_time())
         u, control_data = self.controller.control(state=self.get_state(),
                                                   setpoint={k: v[-1] for k, v in self.setpoints.items()},
                                            parameters = self.parameters)
@@ -299,14 +299,14 @@ class Simulator:
                                ["throttle", self.control_data_log["throttle_setpoint"]],
                                ["propulsion thrust [kg]", ureg.Quantity(self.jsbs_states["propulsion/engine/thrust-lbs"], "lbs").to("kg")],
                            ], "Propulsion")
-        
+
         # altitude
         rg.create_add_plot(self.sim_states["t"],
                            [
                                ["h sp [m]", self.setpoints["altitude"]],
                                ["h [m]", self.jsbs_states["position/h-sl-meters"]],
                            ], "Altitude Setpoint and Altitude")
-        
+
         # velocity
         rg.create_add_plot(self.sim_states["t"],
                            [
