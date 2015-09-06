@@ -26,6 +26,7 @@ include_directories(${FIRMWARE_DIR}src/platforms/posix/include)
 include_directories(${FIRMWARE_DIR}src/modules)
 include_directories(${FIRMWARE_DIR}src/modules/fw_pos_control_l1/mtecs)
 include_directories(${FIRMWARE_DIR}src/lib)
+include_directories(${FIRMWARE_DIR}src/lib/mathlib/math/filter)
 include_directories(${FIRMWARE_DIR}src/include)
 include_directories(${FIRMWARE_DIR}src)
 include_directories(${EIGEN_INCLUDE_DIR})
@@ -52,6 +53,7 @@ add_library(mtecs SHARED
   ${FIRMWARE_CUSTOM_DIR}param/param.cpp
   # ${FIRMWARE_CUSTOM_DIR}param/param_load.cpp
   ${FIRMWARE_DIR}src/lib/mathlib/math/test/test.cpp # needed by blocks
+  ${FIRMWARE_DIR}src/lib/mathlib/math/filter/LowPassFilter2p.cpp
   )
 
 # add python module
