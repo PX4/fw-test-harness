@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import argparse
 from pint import UnitRegistry
 from html_report_generator import HtmlReportGenerator
+from plots import add_plots
 from fixedwing_controller import FixedWingController
 import pyprind
 
@@ -168,7 +169,8 @@ class Simulator:
         r["roll_rate"] = 0.0
         r["pitch_rate"] = 0.0
         r["yaw_rate"] = 0.0
-        r["altitude"] = self.ic["hgt"].magnitude if time < 20 else self.ic["hgt"].magnitude + 10
+        #  r["altitude"] = self.ic["hgt"].magnitude if time < 20 else self.ic["hgt"].magnitude + 10
+        r["altitude"] = self.ic["hgt"].magnitude
         r["velocity"] = self.parameters["airspeed_trim"]
 
         return r
@@ -217,108 +219,7 @@ class Simulator:
     def output_results(self):
         """Generate a report of the simulation"""
         rg = HtmlReportGenerator(self.args)
-
-        # aileron roll figure
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["roll [deg]",
-                                ureg.Quantity(
-                                    self.jsbs_states["attitude/phi-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["aileron", self.jsbs_inputs["fcs/aileron-cmd-norm"]],
-                           ], "Aileron and Roll")
-
-        # roll rollrate sp figure
-        rg.create_add_plot(self.sim_states["t"],
-                           [["Roll [deg]",
-                             ureg.Quantity(
-                                 self.jsbs_states["attitude/phi-rad"],
-                                 "rad").to(ureg.deg).magnitude],
-                            ["roll rate sp [deg/s]",
-                             ureg.Quantity(
-                                 self.control_data_log["roll_rate_setpoint"],
-                                 "rad/s").to(ureg["deg/s"]).magnitude]
-                            ], "Roll and rollrate sp")
-
-        # elevator pitch figure
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["pitch [deg]",
-                                ureg.Quantity(
-                                    self.jsbs_states["attitude/theta-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["elevator", self.jsbs_inputs["fcs/elevator-cmd-norm"]],
-                           ], "Elevator and pitch")
-
-        # pitch pitchrate sp figure
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["pitch sp [deg]",
-                                ureg.Quantity(
-                                    self.control_data_log["pitch_setpoint"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["Pitch [deg]",
-                                ureg.Quantity(
-                                    self.jsbs_states["attitude/theta-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["pitch rate sp [deg/s]",
-                                ureg.Quantity(
-                                    self.control_data_log["pitch_rate_setpoint"],
-                                    "rad/s").to(ureg["deg/s"]).magnitude],
-                           ], "Pitch and pitchrate sp")
-
-        # altitude pitch airspeed figure
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["h [m]", self.jsbs_states["position/h-sl-meters"]],
-                               ["pitch sp [deg]",
-                                ureg.Quantity(
-                                    self.control_data_log["pitch_setpoint"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["pitch [deg]",
-                                ureg.Quantity(
-                                    self.jsbs_states["attitude/theta-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["V_true [m/s]",
-                                ureg.Quantity(
-                                    self.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
-                               ["throttle", self.control_data_log["throttle_setpoint"]],
-                           ], "Altitude, Pitch and Airspeed")
-
-        # flightpath angle
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["flight path angle [deg]",
-                                ureg.Quantity(
-                                    self.jsbs_states["flight-path/gamma-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                           ], "Flight Path Angle")
-
-        # propulsion
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["throttle", self.control_data_log["throttle_setpoint"]],
-                               ["propulsion thrust [kg]", ureg.Quantity(self.jsbs_states["propulsion/engine/thrust-lbs"], "lbs").to("kg")],
-                           ], "Propulsion")
-
-        # altitude
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["h sp [m]", self.setpoints["altitude"]],
-                               ["h [m]", self.jsbs_states["position/h-sl-meters"]],
-                           ], "Altitude Setpoint and Altitude")
-
-        # velocity
-        rg.create_add_plot(self.sim_states["t"],
-                           [
-                               ["V sp [m/s]", self.setpoints["velocity"]],
-                               ["V_true [m/s]",
-                                ureg.Quantity(
-                                    self.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
-                           ], "Velocity Setpoint and Velocity")
-
-
-
+        add_plots(self, rg) # change add_plots to show different plots!
         rg.generate()
         rg.save()
         print("Report saved to {0}".format(self.args["filename_out"]))
