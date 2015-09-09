@@ -11,6 +11,8 @@ from html_report_generator import HtmlReportGenerator
 from plots import add_plots
 from fixedwing_controller import FixedWingController
 import pyprind
+import random
+import copy
 
 ureg = UnitRegistry()
 
@@ -36,6 +38,13 @@ class Simulator:
         #  self.mode = "attitude"
         self.mode = "position"
 
+        self.noise_enabled = True
+        self.sigmas = {
+            "airspeed": 1.0,
+            "altitude": 1.0,
+            "flightpathangle": 0.1,
+        }
+
         self.parameters = {
             "airspeed_trim": 20.0,
             "airspeed_min": 7.0,
@@ -50,7 +59,7 @@ class Simulator:
             "pitch_max_rate_pos": 0.0, # 0: disable
             "pitch_max_rate_neg": 0.0, # 0: disable
             "pitch_roll_ff": 0.0,
-            "throttle_default": 0.1,
+            "throttle_default": 0.5,
             "mtecs_acc_p": 0.01,
             "mtecs_fpa_p": 0.01,
             "mtecs_throttle_ff": 0.0,
@@ -59,6 +68,10 @@ class Simulator:
             "mtecs_pitch_ff": 0.0,
             "mtecs_pitch_p": 0.1,
             "mtecs_pitch_i": 0.03,
+            "mtecs_airspeed_lowpass_cutoff": 0.1,
+            "mtecs_airspeed_derivative_lowpass_cutoff": 0.1,
+            "mtecs_altitude_lowpass_cutoff": 0.1,
+            "mtecs_flightpathangle_lowpass_cutoff": 0.1,
         }
         self.control_surface_scaler = 1.0
 
@@ -104,11 +117,11 @@ class Simulator:
             }
         self.sim_states = {
             "t": [0.0],
-            "roll:": [0.0],
-            "pitch:": [0.0]
         }
         self.setpoints = {}
         self.update_setpoints(0)
+        self.noisy_states = {}
+        self.update_noisy_states(self.get_state())
 
         self.control_data_log = {}
 
@@ -147,7 +160,7 @@ class Simulator:
             self.jsbs_states["velocities/vt-fps"][-1],
             "ft/s").to(ureg["m/s"]).magnitude
         x["altitude"] = self.jsbs_states["position/h-sl-meters"][-1]
-        x["flightpath_angle"] = self.jsbs_states["flight-path/gamma-rad"][-1]
+        x["flightpathangle"] = self.jsbs_states["flight-path/gamma-rad"][-1]
 
         # additonal/secondary data that is not a state in the physical sense but is needed
         # by the controller and describes the aircraft state as well:
@@ -169,8 +182,8 @@ class Simulator:
         r["roll_rate"] = 0.0
         r["pitch_rate"] = 0.0
         r["yaw_rate"] = 0.0
-        #  r["altitude"] = self.ic["hgt"].magnitude if time < 20 else self.ic["hgt"].magnitude + 10
-        r["altitude"] = self.ic["hgt"].magnitude
+        r["altitude"] = self.ic["hgt"].magnitude if time < 20 else self.ic["hgt"].magnitude + 10
+        #  r["altitude"] = self.ic["hgt"].magnitude
         r["velocity"] = self.parameters["airspeed_trim"]
 
         return r
@@ -190,7 +203,12 @@ class Simulator:
         # self.jsbs_inputs["fcs/elevator-cmd-norm"].append(0.01 * (400 -
         # self.jsbs_states["position/h-sl-meters"][-1]))
         self.update_setpoints(self.fdm.get_sim_time())
-        u, control_data = self.controller.control(state=self.get_state(),
+
+        state = self.get_state()
+        self.update_noisy_states(state)
+        state_estimate = self.apply_noise(state) # estimate is simulated as true state plus gaussian noise
+
+        u, control_data = self.controller.control(state=state_estimate,
                                                   setpoint={k: v[-1] for k, v in self.setpoints.items()},
                                            parameters = self.parameters)
         self.jsbs_inputs["fcs/aileron-cmd-norm"].append(u[0] * self.control_surface_scaler)
@@ -223,6 +241,18 @@ class Simulator:
         rg.generate()
         rg.save()
         print("Report saved to {0}".format(self.args["filename_out"]))
+
+    def apply_noise(self, state):
+        """replaces entries in state with the noisy data (for states for which noise data exists)"""
+        state_estimate = copy.copy(state)
+        for k,v in self.noisy_states.items():
+            state_estimate[k] = self.noisy_states[k][-1]
+        return state_estimate
+
+    def update_noisy_states(self, state):
+        """caclculate noisy version of state for which noise data exists"""
+        for k, v in self.sigmas.items():
+            self.noisy_states.setdefault(k,[]).append(state[k] + random.gauss(0,v))
 
     def main(self):
         """main method of the simulator"""
