@@ -72,14 +72,6 @@ def add_plots(simulator, report_generator):
                                ["throttle", simulator.control_data_log["throttle_setpoint"]],
                            ], "Altitude, Pitch and Airspeed")
 
-        # flightpath angle
-        report_generator.create_add_plot(simulator.sim_states["t"],
-                           [
-                               ["flight path angle [deg]",
-                                ureg.Quantity(
-                                    simulator.jsbs_states["flight-path/gamma-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                           ], "Flight Path Angle")
 
         # propulsion
         report_generator.create_add_plot(simulator.sim_states["t"],
@@ -103,4 +95,45 @@ def add_plots(simulator, report_generator):
                                 ureg.Quantity(
                                     simulator.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
                            ], "Velocity Setpoint and Velocity")
+
+        # airspeed vs. filtered airspeed
+        report_generator.create_add_plot(simulator.sim_states["t"],
+                           [
+                               ["V_true [m/s]",
+                                ureg.Quantity(
+                                    simulator.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
+                               ["V_noisy", simulator.noisy_states["airspeed"]],
+                               ["V_filtered", simulator.control_data_log["airspeed_filtered"]],
+                           ], "Airspeed & Filtered Airspeed")
+        
+        # airspeed derivative
+        report_generator.create_add_plot(simulator.sim_states["t"],
+                           [
+                               ["dV/dt filtered", simulator.control_data_log["airspeed_derivative_filtered"]],
+                           ], "Airspeed Derivative")
+
+        # altitude vs filtered altitude
+        report_generator.create_add_plot(simulator.sim_states["t"],
+                           [
+                               ["h [m]", simulator.jsbs_states["position/h-sl-meters"]],
+                               ["h noisy [m]", simulator.noisy_states["altitude"]],
+                               ["h filtered", simulator.control_data_log["altitude_filtered"]],
+                           ], "Altitude and Filtered Altitude")
+
+        # flightpath angle and filtered flight path angle
+        report_generator.create_add_plot(simulator.sim_states["t"],
+                           [
+                               ["flight path angle [deg]",
+                                ureg.Quantity(
+                                    simulator.jsbs_states["flight-path/gamma-rad"],
+                                    "rad").to(ureg.deg).magnitude],
+                               ["flight path angle noisy [deg]",
+                                ureg.Quantity(
+                                    simulator.noisy_states["flightpathangle"],
+                                    "rad").to(ureg.deg).magnitude],
+                               ["flight path angle filtered",
+                                ureg.Quantity(
+                                    simulator.control_data_log["flightpathangle_filtered"],
+                                    "rad").to(ureg.deg).magnitude],
+                           ], "Flight Path Angle")
 

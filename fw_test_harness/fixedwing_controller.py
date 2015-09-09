@@ -190,4 +190,10 @@ class FixedWingController:
         u = [aileron, elevator, rudder, throttle]
         #  print("u", u)
 
+        # save other relevant data
+        control_data["airspeed_filtered"] = self.c_te.getAirspeedLowpassState()
+        control_data["altitude_filtered"] = self.c_te.getAltitudeLowpassState()
+        control_data["flightpathangle_filtered"] = self.c_te.getFlightPathAngleLowpassState()
+        control_data["airspeed_derivative_filtered"] = self.c_te.getAirspeedDerivativeLowpassState()
+
         return [u, control_data]

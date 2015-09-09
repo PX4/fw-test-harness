@@ -23,6 +23,10 @@ cdef extern from "mTecs.h" namespace "fwPosctrl":
                                 float airspeedSp, unsigned mode, LimitOverride limitOverride);
         float getThrottleSetpoint()
         float getPitchSetpoint()
+        float getFlightPathAngleLowpassState()
+        float getAltitudeLowpassState()
+        float getAirspeedLowpassState()
+        float getAirspeedDerivativeLowpassState()
 
 cdef extern from "systemlib/param/param.h":
     # cdef enum param_type_e:
@@ -82,7 +86,7 @@ cdef class PyMTecs(object):
 
     cdef mTecs *thisptr      # hold a C++ instance which we're wrapping
     cdef param_info_s params[100]
-    
+
     def __init__(self, paramd):
         """Loads a dict of params into the simulated px4 param system"""
         i = 0
@@ -114,5 +118,14 @@ cdef class PyMTecs(object):
     def getPitchSetpoint(self):
         return self.thisptr.getPitchSetpoint()
 
+    def getFlightPathAngleLowpassState(self):
+        return self.thisptr.getFlightPathAngleLowpassState()
 
+    def getAltitudeLowpassState(self):
+        return self.thisptr.getAltitudeLowpassState()
 
+    def getAirspeedLowpassState(self):
+        return self.thisptr.getAirspeedLowpassState()
+
+    def getAirspeedDerivativeLowpassState(self):
+        return self.thisptr.getAirspeedDerivativeLowpassState()
