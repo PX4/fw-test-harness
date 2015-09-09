@@ -15,6 +15,11 @@ class FixedWingController:
         :param control_total_energy_divider run total enery controller every xth time
         """
         self.mode = mode
+
+        # since we run on python2, make sure that all params are floats
+        for p in params:
+            params[p] = float(params[p])
+
         self.params = params
 
         # Attitude Control
@@ -63,15 +68,15 @@ class FixedWingController:
             "MT_THR_MAX": 1.0,
             "MT_PIT_MIN": -45.0,
             "MT_PIT_MAX": 20.0,
-            "MT_ALT_LP": 1.0,
-            "MT_FPA_LP": 1.0,
+            "MT_ALT_LP": params["mtecs_altitude_lowpass_cutoff"],
+            "MT_FPA_LP": params["mtecs_flightpathangle_lowpass_cutoff"],
             "MT_FPA_P": params["mtecs_fpa_p"],
             "MT_FPA_D": 0.0,
             "MT_FPA_D_LP": 1.0,
             "MT_FPA_MIN": -20.0,
             "MT_FPA_MAX": 30.0,
-            "MT_A_LP": 0.5,
-            "MT_AD_LP": 0.5,
+            "MT_A_LP": params["mtecs_airspeed_lowpass_cutoff"],
+            "MT_AD_LP": params["mtecs_airspeed_derivative_lowpass_cutoff"],
             "MT_ACC_P": params["mtecs_acc_p"],
             "MT_ACC_D": 0.0,
             "MT_ACC_D_LP": 0.5,
@@ -133,7 +138,7 @@ class FixedWingController:
                     #  limitOverride.disablePitchMaxOverride();
             #  }
             limitoverride.disablePitchMaxOverride();
-            self.c_te.updateAltitudeSpeed(state["flightpath_angle"],
+            self.c_te.updateAltitudeSpeed(state["flightpathangle"],
                                           state["altitude"],
                                           setpoint["altitude"],
                                           state["airspeed"],
