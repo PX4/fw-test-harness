@@ -13,10 +13,10 @@ class HtmlReportGenerator:
         """Constructor"""
         self.args = args
         self.report = "" # the html string
-        self.variables = {} # dictionary cotnaining all the result varaibles
+        self.variables = {} # dictionary cotnaining all the result variables
         self.title = ""
         self.plots = collections.OrderedDict() # dictionary of matplotlib plots
-        self.plots_mpld3 = collections.OrderedDict() # dictionary of matplotlib plots
+        self.plots_mpld3 = collections.OrderedDict() # dictionary of mpld3 plots
 
 
     def generate(self):
@@ -65,8 +65,6 @@ class HtmlReportGenerator:
         plt.xlabel("time [s]")
         plt.legend([ v[0] for v in plot_values])
         self.plots[title] = fig
-
-
 
     def test(self):
         """Test"""

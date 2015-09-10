@@ -13,6 +13,7 @@ from fixedwing_controller import FixedWingController
 import pyprind
 import random
 import copy
+from analysis import analyse
 
 ureg = UnitRegistry()
 
@@ -59,7 +60,7 @@ class Simulator:
             "pitch_max_rate_pos": 0.0, # 0: disable
             "pitch_max_rate_neg": 0.0, # 0: disable
             "pitch_roll_ff": 0.0,
-            "throttle_default": 0.5,
+            "throttle_default": 0.2,
             "mtecs_acc_p": 0.01,
             "mtecs_fpa_p": 0.01,
             "mtecs_throttle_ff": 0.0,
@@ -238,6 +239,7 @@ class Simulator:
         """Generate a report of the simulation"""
         rg = HtmlReportGenerator(self.args)
         add_plots(self, rg) # change add_plots to show different plots!
+        rg.variables.update(analyse(self))
         rg.generate()
         rg.save()
         print("Report saved to {0}".format(self.args["filename_out"]))
