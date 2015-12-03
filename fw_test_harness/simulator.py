@@ -41,9 +41,11 @@ class Simulator:
 
         self.noise_enabled = True
         self.sigmas = {
-            "airspeed": 1.0,
-            "altitude": 1.0,
-            "flightpathangle": 0.1,
+            "airspeed": 5.0,
+            "altitude": 2.0,
+            "speed_body_u": 1.0, # TODO think again about introducing the noise in the body frame
+            "speed_body_v": 1.0,
+            "speed_body_w": 1.0,
         }
 
         self.parameters = {

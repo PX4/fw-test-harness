@@ -111,11 +111,11 @@ class FixedWingController:
 
     def call_mtecs(self, state, setpoint):
         """helper function to pass the right arguments to mtecs"""
-        flightPathAngle = 0.0
+        flightpathangle = 0.0
         ground_speed = self.get_ground_speed_vec(state)
         ground_speed_length = np.linalg.norm(ground_speed)
         if ground_speed_length > sys.float_info.epsilon:
-            flightPathAngle = -np.arcsin(ground_speed[2]/ground_speed_length)
+            flightpathangle = -np.arcsin(ground_speed[2]/ground_speed_length)
 
             limitoverride = PyLimitOverride()
             #  if (_vehicle_status.engine_failure || _vehicle_status.engine_failure_cmd) {
@@ -138,13 +138,14 @@ class FixedWingController:
                     #  limitOverride.disablePitchMaxOverride();
             #  }
             limitoverride.disablePitchMaxOverride();
-            self.c_te.updateAltitudeSpeed(state["flightpathangle"],
+            self.c_te.updateAltitudeSpeed(flightpathangle,
                                           state["altitude"],
                                           setpoint["altitude"],
                                           state["airspeed"],
                                           setpoint["velocity"],
                                           self.c_te.mtecs_mode_normal,
                                           limitoverride);
+            return flightpathangle
 
 
     def control(self, **kwargs):
@@ -172,9 +173,16 @@ class FixedWingController:
 
         if self.mode == "position":
             if self.control_count % self.control_total_energy_divider == 0:
-                self.call_mtecs(y, r)
+                flightpathangle = self.call_mtecs(y, r)
             control_data["pitch_setpoint"] = self.c_te.getPitchSetpoint()
             throttle = self.c_te.getThrottleSetpoint()
+
+            # save other relevant data
+            control_data["airspeed_filtered"] = self.c_te.getAirspeedLowpassState()
+            control_data["altitude_filtered"] = self.c_te.getAltitudeLowpassState()
+            control_data["flightpathangle"] = flightpathangle 
+            control_data["flightpathangle_filtered"] = self.c_te.getFlightPathAngleLowpassState()
+            control_data["airspeed_derivative_filtered"] = self.c_te.getAirspeedDerivativeLowpassState()
         else:
             throttle = self.params["throttle_default"]
         control_data["throttle_setpoint"] = throttle
@@ -190,10 +198,5 @@ class FixedWingController:
         u = [aileron, elevator, rudder, throttle]
         #  print("u", u)
 
-        # save other relevant data
-        control_data["airspeed_filtered"] = self.c_te.getAirspeedLowpassState()
-        control_data["altitude_filtered"] = self.c_te.getAltitudeLowpassState()
-        control_data["flightpathangle_filtered"] = self.c_te.getFlightPathAngleLowpassState()
-        control_data["airspeed_derivative_filtered"] = self.c_te.getAirspeedDerivativeLowpassState()
 
         return [u, control_data]
