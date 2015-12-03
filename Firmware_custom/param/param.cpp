@@ -85,3 +85,10 @@ param_find(const char *name)
     /* not found */
     return PARAM_INVALID;
 }
+
+int
+param_set(param_t param, const void *val)
+{
+    // XXX not implemented since this is not needed by fw-test-harness
+    return 0;
+}

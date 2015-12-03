@@ -99,10 +99,10 @@ def add_plots(simulator, report_generator):
         # airspeed vs. filtered airspeed
         report_generator.create_add_plot(simulator.sim_states["t"],
                            [
+                               ["V_noisy", simulator.noisy_states["airspeed"]],
                                ["V_true [m/s]",
                                 ureg.Quantity(
                                     simulator.jsbs_states["velocities/vt-fps"], "ft/s").to(ureg["m/s"]).magnitude],
-                               ["V_noisy", simulator.noisy_states["airspeed"]],
                                ["V_filtered", simulator.control_data_log["airspeed_filtered"]],
                            ], "Airspeed & Filtered Airspeed")
         
@@ -115,21 +115,21 @@ def add_plots(simulator, report_generator):
         # altitude vs filtered altitude
         report_generator.create_add_plot(simulator.sim_states["t"],
                            [
-                               ["h [m]", simulator.jsbs_states["position/h-sl-meters"]],
                                ["h noisy [m]", simulator.noisy_states["altitude"]],
+                               ["h [m]", simulator.jsbs_states["position/h-sl-meters"]],
                                ["h filtered", simulator.control_data_log["altitude_filtered"]],
                            ], "Altitude and Filtered Altitude")
 
         # flightpath angle and filtered flight path angle
         report_generator.create_add_plot(simulator.sim_states["t"],
                            [
+                               ["flight path angle noisy [deg]",
+                                ureg.Quantity(
+                                    simulator.control_data_log["flightpathangle"],
+                                    "rad").to(ureg.deg).magnitude],
                                ["flight path angle [deg]",
                                 ureg.Quantity(
                                     simulator.jsbs_states["flight-path/gamma-rad"],
-                                    "rad").to(ureg.deg).magnitude],
-                               ["flight path angle noisy [deg]",
-                                ureg.Quantity(
-                                    simulator.noisy_states["flightpathangle"],
                                     "rad").to(ureg.deg).magnitude],
                                ["flight path angle filtered",
                                 ureg.Quantity(
