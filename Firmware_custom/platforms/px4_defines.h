@@ -1,6 +1,4 @@
-#if !defined(isfinite)
-#define PX4_ISFINITE(x) std::isfinite(x)
-#endif
+#define PX4_ISFINITE(x) isfinite(x)
 
 #define MAX_RAND 32767
 
